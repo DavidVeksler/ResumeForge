@@ -8,7 +8,7 @@ echo "======================================"
 
 # Configuration
 APP_NAME="resumeforge"
-APP_USER="ubuntu"
+APP_USER="johngalt"
 APP_DIR="/var/www/resumeforge.davidveksler.com/ResumeForge"
 PYTHON_VERSION="python3"
 
