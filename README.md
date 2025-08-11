@@ -8,7 +8,9 @@ A professional full-stack web application that uses AI to optimize resumes for A
 - Python 3.8+
 - Node.js 16+
 - npm
-- **Optional**: OpenAI API key (for text-to-JSON conversion)
+- **AI Provider**: Choose one of:
+  - OpenAI API key (recommended for production)
+  - Local LLM setup (LM Studio for privacy/offline use)
 
 ### Installation & Setup
 
@@ -26,19 +28,26 @@ A professional full-stack web application that uses AI to optimize resumes for A
    ./install_pdf_support.sh
    ```
 
-3. **Start Backend** (Terminal 1)
+3. **Configure AI Provider**
+   ```bash
+   # Copy and edit environment configuration
+   cp .env.example .env
+   # Edit .env to set your AI provider and credentials
+   ```
+
+4. **Start Backend** (Terminal 1)
    ```bash
    ./start_backend.sh
    # Automatically falls back to simple server if Flask dependencies unavailable
    ```
 
-4. **Start Frontend** (Terminal 2)
+5. **Start Frontend** (Terminal 2)
    ```bash
    ./start_frontend.sh
    # Installs npm dependencies automatically
    ```
 
-5. **Open Application**
+6. **Open Application**
    ```
    Backend:  http://localhost:5000
    Frontend: http://localhost:3000
@@ -54,6 +63,54 @@ python3 resume_generator.py
 
 # Generate job-customized resume
 python3 resume_generator.py david_resume_json.json ats job_description.txt
+```
+
+## 🤖 AI Provider Configuration
+
+The application supports two AI providers for text-to-JSON resume conversion:
+
+### OpenAI API (Recommended)
+```bash
+# In .env file:
+AI_PROVIDER=openai
+OPENAI_API_KEY=your-openai-api-key-here
+OPENAI_MODEL=gpt-4o-mini  # or gpt-4, gpt-3.5-turbo
+```
+
+**Benefits:**
+- High accuracy and consistency
+- Fast processing (~3-5 seconds)
+- No local setup required
+- Production-ready
+
+**Cost:** ~$0.15-0.60 per 1K tokens (very affordable for resume processing)
+
+### Local LLM (Privacy & Offline)
+```bash
+# In .env file:
+AI_PROVIDER=local
+LOCAL_LLM_BASE_URL=http://172.28.144.1:1234/v1
+LOCAL_MODEL_NAME=local-model
+```
+
+**Benefits:**
+- Complete data privacy
+- No API costs
+- Offline operation
+- Full control over model
+
+**Requirements:**
+1. Install [LM Studio](https://lmstudio.ai/)
+2. Download a model (Llama 3.1, Mistral, etc.)
+3. Start local server
+
+### Testing Your Configuration
+```bash
+# Test both providers
+python3 test_ai_providers.py
+
+# Interactive demonstration
+python3 demo_ai_switching.py
 ```
 
 ## 📁 Project Structure
@@ -108,7 +165,7 @@ src/
 
 ### 📤 **Resume Input Options**
 - **JSON Upload**: Drag & drop structured JSON resume files
-- **Text-to-JSON Conversion**: AI-powered conversion from any text resume (requires OpenAI API key)
+- **Text-to-JSON Conversion**: AI-powered conversion from any text resume (supports OpenAI API or Local LLM)
 - Real-time structure validation
 - Sample template download
 - Detailed error feedback
@@ -146,7 +203,7 @@ src/
 | `/api/export-pdf` | POST | Generate PDF export |
 | `/api/validate-resume` | POST | Validate resume structure |
 | `/api/sample-resume` | GET | Download sample template |
-| `/api/parse-resume` | POST | AI-powered text-to-JSON conversion |
+| `/api/parse-resume` | POST | AI-powered text-to-JSON conversion (OpenAI/Local) |
 | `/api/health` | GET | Health check |
 
 ## 🧪 Manual Testing
@@ -190,9 +247,9 @@ Use the "Download Sample Template" button for a complete example.
 ## 🔄 Development
 
 The application uses:
-- **Backend**: Flask with CORS support and OpenAI integration
+- **Backend**: Flask with CORS support and configurable AI integration
 - **Frontend**: React with Bootstrap 5 and advanced component architecture
-- **AI Integration**: OpenAI GPT-4 for intelligent text-to-JSON conversion
+- **AI Integration**: Configurable OpenAI API or Local LLM for intelligent text-to-JSON conversion
 - **Data Persistence**: Comprehensive browser storage with auto-save and expiration
 - **Styling**: Custom CSS with Inter font and professional animations
 - **PDF Generation**: wkhtmltopdf + pdfkit for high-quality exports
@@ -220,8 +277,14 @@ python3 basic_integration_test.py
 # Full integration test (requires OpenAI API key)
 python3 integration_test.py
 
+# AI provider configuration tests
+python3 test_ai_providers.py
+
 # Mock API tests (standalone)
 python3 test_mock_api.py
+
+# Interactive AI provider demonstration
+python3 demo_ai_switching.py
 ```
 
 ### Manual Testing Checklist

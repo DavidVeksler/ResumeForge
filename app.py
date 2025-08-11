@@ -39,6 +39,13 @@ from resume_generator import ResumeGenerator, extract_keywords_from_job_descript
 from typing import Dict, List, Any
 import re
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    print("python-dotenv not installed, using system environment variables")
+
 if FLASK_AVAILABLE:
     app = Flask(__name__)
     CORS(app)  # Enable CORS for React frontend
@@ -199,9 +206,9 @@ if FLASK_AVAILABLE:
 
     @app.route('/api/parse-resume', methods=['POST'])
     def parse_text_resume():
-        """Convert text resume to structured JSON using OpenAI"""
+        """Convert text resume to structured JSON using configurable AI provider"""
         if not OPENAI_AVAILABLE:
-            return jsonify({'error': 'OpenAI not available. Install openai package and set API key.'}), 500
+            return jsonify({'error': 'OpenAI package not available. Install openai package.'}), 500
         
         try:
             data = request.get_json()
@@ -212,12 +219,27 @@ if FLASK_AVAILABLE:
             if not text_resume:
                 return jsonify({'error': 'Text resume cannot be empty'}), 400
             
-            # Initialize OpenAI client for local LM Studio
-            # Note: LM Studio doesn't require a real API key, but the client expects one
-            client = OpenAI(
-                api_key="local-key",  # LM Studio doesn't require real API key
-                base_url="http://172.28.144.1:1234/v1"  # LM Studio local endpoint
-            )
+            # Get AI provider configuration
+            ai_provider = os.getenv('AI_PROVIDER', 'local').lower()
+            
+            # Initialize client based on provider
+            if ai_provider == 'openai':
+                # OpenAI API configuration
+                api_key = os.getenv('OPENAI_API_KEY')
+                if not api_key:
+                    return jsonify({'error': 'OpenAI API key not configured. Set OPENAI_API_KEY environment variable.'}), 500
+                
+                client = OpenAI(api_key=api_key)
+                model_name = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
+                
+            else:
+                # Local LLM configuration (default)
+                base_url = os.getenv('LOCAL_LLM_BASE_URL', 'http://172.28.144.1:1234/v1')
+                client = OpenAI(
+                    api_key="local-key",  # Local LLM doesn't require real API key
+                    base_url=base_url
+                )
+                model_name = os.getenv('LOCAL_MODEL_NAME', 'local-model')
             
             # Create the parsing prompt
             system_prompt = """You are a resume parsing expert. Convert the provided text resume into a structured JSON format exactly matching this schema:
@@ -292,10 +314,7 @@ Instructions:
 
 Return ONLY the JSON structure, no additional text."""
 
-            # Make API call to local LM Studio
-            # LM Studio typically uses the loaded model name or "local-model"
-            model_name = os.getenv('LOCAL_MODEL_NAME', 'local-model')
-            
+            # Make API call to configured AI provider
             response = client.chat.completions.create(
                 model=model_name,
                 messages=[
@@ -341,9 +360,26 @@ Return ONLY the JSON structure, no additional text."""
     @app.route('/api/health', methods=['GET'])
     def health_check():
         """Health check endpoint"""
+        ai_provider = os.getenv('AI_PROVIDER', 'local').lower()
+        ai_config = {}
+        
+        if ai_provider == 'openai':
+            ai_config = {
+                'provider': 'openai',
+                'model': os.getenv('OPENAI_MODEL', 'gpt-4o-mini'),
+                'api_key_configured': bool(os.getenv('OPENAI_API_KEY'))
+            }
+        else:
+            ai_config = {
+                'provider': 'local',
+                'base_url': os.getenv('LOCAL_LLM_BASE_URL', 'http://172.28.144.1:1234/v1'),
+                'model': os.getenv('LOCAL_MODEL_NAME', 'local-model')
+            }
+        
         return jsonify({
             'status': 'healthy', 
             'message': 'Resume Optimizer API is running',
+            'ai_configuration': ai_config,
             'features': {
                 'pdf_export': PDFKIT_AVAILABLE,
                 'validation': True,

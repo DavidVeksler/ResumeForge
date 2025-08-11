@@ -110,10 +110,15 @@ const FileUpload = ({ onFileUpload, fileName, disabled }) => {
 
   const handleDownloadSample = async (e) => {
     e.preventDefault();
+    setError(''); // Clear any existing errors
     setIsDownloadingSample(true);
     
     try {
       const response = await getSampleResume();
+      
+      if (!response || !response.sampleData) {
+        throw new Error('Invalid response from server');
+      }
       
       // Create and download the sample file
       const blob = new Blob([JSON.stringify(response.sampleData, null, 2)], {
@@ -128,7 +133,8 @@ const FileUpload = ({ onFileUpload, fileName, disabled }) => {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
-      setError('Failed to download sample resume template');
+      console.error('Download error:', error);
+      setError(`Failed to download sample resume template: ${error.message}`);
     } finally {
       setIsDownloadingSample(false);
     }

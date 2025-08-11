@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **data-driven resume generator** that treats career information as structured JSON data and dynamically customizes resumes for specific job opportunities. The core philosophy separates content from presentation, enabling programmatic optimization.
 
+The system now supports **configurable AI providers** for text-to-JSON conversion, allowing users to choose between OpenAI API (production) or Local LLM (privacy/offline) implementations.
+
 ### Core Components
 
 **`resume_generator.py`** - Main application with three key functions:
@@ -98,4 +100,28 @@ The system includes a comprehensive automated testing suite for ATS optimization
 ```bash
 ./run_ats_tests.sh --verbose    # Full test suite with detailed analysis
 python3 test_resume_suite.py    # Direct test execution
+
+# AI Provider Testing and Configuration
+python3 test_ai_providers.py    # Test both OpenAI and Local LLM providers
+python3 demo_ai_switching.py    # Interactive demonstration of provider switching
 ```
+
+## AI Provider Configuration
+
+The application supports two AI providers for text-to-JSON conversion:
+
+### OpenAI API (Current Configuration)
+```bash
+AI_PROVIDER=openai
+OPENAI_API_KEY=sk-svcacct-[configured]
+OPENAI_MODEL=gpt-4o-mini
+```
+
+### Local LLM (Alternative)
+```bash  
+AI_PROVIDER=local
+LOCAL_LLM_BASE_URL=http://172.28.144.1:1234/v1
+LOCAL_MODEL_NAME=local-model
+```
+
+**To switch providers:** Update `.env` file and restart Flask backend. The React frontend automatically uses the configured provider without changes.
