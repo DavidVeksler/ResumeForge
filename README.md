@@ -258,16 +258,27 @@ The system is designed to work even with minimal dependencies:
 - **No npm/React**: Use command-line resume generation
 - **No OpenAI API**: Core optimization still works without AI features
 
+## 🚀 Ubuntu Server Deployment
+
+**Ready for production deployment!** See [`DEPLOYMENT.md`](DEPLOYMENT.md) for complete Ubuntu server setup.
+
+### Quick Deploy
+```bash
+git clone <your-repo> /home/ubuntu/ResumeForge
+cd /home/ubuntu/ResumeForge
+./deploy.sh
+```
+
+Includes systemd services, Nginx configuration, SSL setup, and production optimizations.
+
 ## 🗃️ Archive
 
-Historical files, documentation, and test outputs have been moved to:
+Historical documentation files moved to:
 ```
-../archive/
-├── Documentation & README files
-├── Demo outputs and test results
-├── Legacy templates and scripts
-├── Test job descriptions
-└── Development artifacts
+Archived/
+├── FEATURE_SUMMARY.md
+├── LANDING_PAGE_IMPLEMENTATION.md  
+└── LM_STUDIO_SETUP.md
 ```
 
 ## 🎉 New Features Implemented
