@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "*",
+      "Bash(python:*)",
+      "Bash(chmod:*)",
+      "Bash(./run_ats_tests.sh:*)",
+      "Bash(cp:*)",
+      "Bash(ls:*)",
+      "Bash(pip3 install:*)",
+      "Bash(find:*)",
+      "Bash(node:*)",
+      "Bash(./setup_dev.sh:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(./start_backend.sh:*)",
+      "Bash(sudo apt:*)",
+      "Bash(sudo apt install:*)",
+      "Bash(./install_dependencies.sh:*)",
+      "Bash(pkill:*)",
+      "Bash(./start_frontend.sh)",
+      "Bash(curl:*)",
+      "Bash(timeout:*)",
+      "Bash(./node_modules/.bin/react-scripts:*)",
+      "Bash(rm:*)",
+      "Bash(npm install)",
+      "Bash(source:*)",
+      "Bash(pip install:*)",
+      "Bash(npm start)",
+      "Bash(export REACT_APP_API_URL=http://localhost:5000)",
+      "Bash(grep:*)",
+      "Bash(npm run build:*)",
+      "Bash(export BROWSER=none)",
+      "Bash(echo:*)",
+      "Bash(pip show:*)"
+    ],
+    "deny": []
+  }
+}
