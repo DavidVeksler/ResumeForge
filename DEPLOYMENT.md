@@ -12,11 +12,33 @@ This application is **ready for Ubuntu server deployment** with the provided aut
 ### One-Command Deployment
 ```bash
 # Clone the repository
-git clone https://github.com/DavidVeksler/ResumeForge /home/ubuntu/ResumeForge
-cd /home/ubuntu/ResumeForge
+git clone https://github.com/DavidVeksler/ResumeForge /var/www/resumeforge.davidveksler.com/ResumeForge
+cd /var/www/resumeforge.davidveksler.com/ResumeForge
 
-# Run the deployment script
+# Run the deployment script (as johngalt user)
 ./deploy.sh
+```
+
+## 🔧 WordOps Deployment
+
+### Current Configuration
+- **Server Management**: WordOps-managed Ubuntu server
+- **Application Directory**: `/var/www/resumeforge.davidveksler.com/ResumeForge`
+- **Application User**: `johngalt` (not ubuntu)
+- **Domain**: `resumeforge.davidveksler.com` 
+- **Nginx Config**: `/etc/nginx/sites-available/resumeforge.davidveksler.com`
+- **Service Files**: systemd services for backend API
+
+### WordOps Commands
+```bash
+# Check site status
+wo site info resumeforge.davidveksler.com
+
+# Enable SSL
+wo site update resumeforge.davidveksler.com --letsencrypt
+
+# View site logs
+wo log show resumeforge.davidveksler.com
 ```
 
 ## 🔧 What Gets Deployed
@@ -36,7 +58,7 @@ cd /home/ubuntu/ResumeForge
 ## 📋 Post-Deployment Configuration
 
 ### 1. Environment Variables
-Edit `/home/ubuntu/ResumeForge/.env`:
+Edit `/var/www/resumeforge.davidveksler.com/ResumeForge/.env`:
 ```bash
 # Required for AI features
 OPENAI_API_KEY=your_openai_api_key_here
@@ -44,22 +66,27 @@ OPENAI_API_KEY=your_openai_api_key_here
 # Production settings  
 FLASK_ENV=production
 FLASK_DEBUG=False
-REACT_APP_API_URL=https://yourdomain.com
+REACT_APP_API_URL=https://resumeforge.davidveksler.com
 ```
 
-### 2. Domain Configuration
-Update `nginx.conf`:
+### 2. Domain Configuration (WordOps)
+The nginx configuration is managed by WordOps at:
+- `/etc/nginx/sites-available/resumeforge.davidveksler.com`
+- `/etc/nginx/sites-enabled/resumeforge.davidveksler.com`
+
+Domain is already configured as:
 ```nginx
-server_name your_domain.com www.your_domain.com;
+server_name resumeforge.davidveksler.com www.resumeforge.davidveksler.com;
 ```
 
-### 3. SSL Certificate (Recommended)
+### 3. SSL Certificate (WordOps)
+SSL certificates are managed by WordOps. To enable SSL:
 ```bash
-# Install Certbot
-sudo apt install certbot python3-certbot-nginx
+# Enable SSL for the site
+wo site update resumeforge.davidveksler.com --letsencrypt
 
-# Get SSL certificate
-sudo certbot --nginx -d your_domain.com -d www.your_domain.com
+# Or enable SSL with other WordOps options
+wo site update resumeforge.davidveksler.com --letsencrypt=subdomain
 ```
 
 ## 🔍 Service Management
@@ -108,8 +135,8 @@ sudo tail -f /var/log/nginx/access.log
 ## 📊 Monitoring
 
 ### Health Checks
-- Backend API: `http://your-domain.com/api/health`
-- Frontend: `http://your-domain.com`
+- Backend API: `https://resumeforge.davidveksler.com/api/health`
+- Frontend: `https://resumeforge.davidveksler.com`
 - Service status: `systemctl status resumeforge-backend`
 
 ### Log Locations
@@ -151,7 +178,7 @@ sudo tail -f /var/log/nginx/access.log
 
 ### Application Updates
 ```bash
-cd /home/ubuntu/ResumeForge
+cd /var/www/resumeforge.davidveksler.com/ResumeForge
 git pull origin main
 npm run build
 sudo systemctl restart resumeforge-backend
@@ -167,12 +194,12 @@ sudo systemctl restart resumeforge-backend nginx
 
 - [ ] Server provisioned with Ubuntu 20.04+
 - [ ] SSH access configured
-- [ ] Domain name pointed to server IP
-- [ ] Repository cloned to `/home/ubuntu/ResumeForge`
-- [ ] `./deploy.sh` executed successfully
+- [ ] Domain name pointed to server IP (managed by WordOps)
+- [ ] Repository cloned to `/var/www/resumeforge.davidveksler.com/ResumeForge`
+- [ ] `./deploy.sh` executed successfully as johngalt user
 - [ ] `.env` file configured with API keys
-- [ ] Domain name updated in `nginx.conf`
-- [ ] SSL certificate installed (recommended)
+- [ ] WordOps nginx configuration updated for API proxy
+- [ ] SSL certificate installed via WordOps (recommended)
 - [ ] Services running: `resumeforge-backend`, `nginx`
 - [ ] Firewall configured and enabled
 - [ ] Health checks passing

@@ -7,15 +7,15 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-User=ubuntu
-ExecStart=/home/ubuntu/ResumeForge/venv/bin/python /home/ubuntu/ResumeForge/app.py
-WorkingDirectory=/home/ubuntu/ResumeForge
-Environment=PATH=/home/ubuntu/ResumeForge/venv/bin
+User=johngalt
+ExecStart=/var/www/resumeforge.davidveksler.com/ResumeForge/venv/bin/python /var/www/resumeforge.davidveksler.com/ResumeForge/app.py
+WorkingDirectory=/var/www/resumeforge.davidveksler.com/ResumeForge
+Environment=PATH=/var/www/resumeforge.davidveksler.com/ResumeForge/venv/bin
 Environment=FLASK_ENV=production
 Environment=FLASK_DEBUG=False
-Environment=PYTHONPATH=/home/ubuntu/ResumeForge
+Environment=PYTHONPATH=/var/www/resumeforge.davidveksler.com/ResumeForge
 Environment=PORT=5000
-EnvironmentFile=-/home/ubuntu/ResumeForge/.env
+EnvironmentFile=-/var/www/resumeforge.davidveksler.com/ResumeForge/.env
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=resumeforge-backend
