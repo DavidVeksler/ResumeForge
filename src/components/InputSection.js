@@ -345,6 +345,63 @@ const InputSection = ({ onOptimize, isLoading, onBackToLanding }) => {
                     fileName={fileName}
                     disabled={isLoading}
                   />
+                  
+                  {/* JSON Preview for uploaded files */}
+                  {resumeData && fileName && (
+                    <div className="mt-3">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <small className="text-muted fw-semibold">
+                          <i className="bi bi-file-earmark-code me-1"></i>
+                          JSON Preview: {fileName}
+                        </small>
+                        <div className="btn-group">
+                          <button
+                            className="btn btn-outline-secondary btn-sm"
+                            onClick={() => {
+                              navigator.clipboard.writeText(JSON.stringify(resumeData, null, 2));
+                            }}
+                            title="Copy JSON to clipboard"
+                          >
+                            <i className="bi bi-clipboard me-1"></i>
+                            Copy
+                          </button>
+                          <button
+                            className="btn btn-outline-primary btn-sm"
+                            onClick={() => {
+                              const blob = new Blob([JSON.stringify(resumeData, null, 2)], {
+                                type: 'application/json'
+                              });
+                              const url = URL.createObjectURL(blob);
+                              const link = document.createElement('a');
+                              link.href = url;
+                              link.download = fileName.endsWith('.json') ? fileName : `${fileName}.json`;
+                              document.body.appendChild(link);
+                              link.click();
+                              document.body.removeChild(link);
+                              URL.revokeObjectURL(url);
+                            }}
+                            title="Download JSON file"
+                          >
+                            <i className="bi bi-download me-1"></i>
+                            Download
+                          </button>
+                        </div>
+                      </div>
+                      <div 
+                        className="border rounded p-2 bg-light"
+                        style={{ 
+                          maxHeight: '200px', 
+                          overflowY: 'auto',
+                          fontSize: '0.75rem',
+                          fontFamily: 'monospace'
+                        }}
+                      >
+                        <pre className="mb-0 text-muted">
+                          {JSON.stringify(resumeData, null, 2)}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div>
@@ -355,6 +412,42 @@ const InputSection = ({ onOptimize, isLoading, onBackToLanding }) => {
                     onResumeConverted={handleTextResumeConverted}
                     onError={handleTextResumeError}
                   />
+                  
+                  {/* JSON Preview for converted data */}
+                  {resumeData && (
+                    <div className="mt-3">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <small className="text-muted fw-semibold">
+                          <i className="bi bi-file-earmark-code me-1"></i>
+                          Converted JSON Preview
+                        </small>
+                        <button
+                          className="btn btn-outline-secondary btn-sm"
+                          onClick={() => {
+                            navigator.clipboard.writeText(JSON.stringify(resumeData, null, 2));
+                            // Could add a temporary success indicator here
+                          }}
+                          title="Copy JSON to clipboard"
+                        >
+                          <i className="bi bi-clipboard me-1"></i>
+                          Copy
+                        </button>
+                      </div>
+                      <div 
+                        className="border rounded p-2 bg-light"
+                        style={{ 
+                          maxHeight: '200px', 
+                          overflowY: 'auto',
+                          fontSize: '0.75rem',
+                          fontFamily: 'monospace'
+                        }}
+                      >
+                        <pre className="mb-0 text-muted">
+                          {JSON.stringify(resumeData, null, 2)}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

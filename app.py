@@ -359,34 +359,241 @@ Return ONLY the JSON structure, no additional text."""
 
     @app.route('/api/health', methods=['GET'])
     def health_check():
-        """Health check endpoint"""
+        """Enhanced health check endpoint with detailed system information"""
+        import datetime
+        import subprocess
+        import platform
+        
+        # Try to import psutil, but handle gracefully if not available
+        try:
+            import psutil
+            PSUTIL_AVAILABLE = True
+        except ImportError:
+            PSUTIL_AVAILABLE = False
+            psutil = None
+        
+        health_data = {
+            'status': 'healthy',
+            'timestamp': datetime.datetime.utcnow().isoformat() + 'Z',
+            'version': '1.0.0',
+            'message': 'Resume Optimizer API is running'
+        }
+        
+        # System Information
+        system_info = {
+            'platform': platform.platform(),
+            'python_version': platform.python_version()
+        }
+        
+        if PSUTIL_AVAILABLE:
+            try:
+                memory = psutil.virtual_memory()
+                disk = psutil.disk_usage('/')
+                system_info.update({
+                    'memory': {
+                        'total_gb': round(memory.total / (1024**3), 2),
+                        'available_gb': round(memory.available / (1024**3), 2),
+                        'used_percent': memory.percent
+                    },
+                    'disk': {
+                        'total_gb': round(disk.total / (1024**3), 2),
+                        'free_gb': round(disk.free / (1024**3), 2),
+                        'used_percent': round((disk.used / disk.total) * 100, 1)
+                    }
+                })
+            except Exception as e:
+                system_info['psutil_error'] = f'Could not retrieve detailed system info: {str(e)}'
+        else:
+            system_info['note'] = 'Install psutil for detailed memory and disk usage information'
+        
+        health_data['system'] = system_info
+        
+        # Dependency Checks
+        dependencies = {
+            'flask': FLASK_AVAILABLE,
+            'openai': OPENAI_AVAILABLE,
+            'pdfkit': PDFKIT_AVAILABLE,
+            'wkhtmltopdf': False,
+            'psutil': PSUTIL_AVAILABLE,
+            'dotenv': False
+        }
+        
+        # Check wkhtmltopdf binary
+        try:
+            result = subprocess.run(['wkhtmltopdf', '--version'], capture_output=True, check=True, timeout=5)
+            dependencies['wkhtmltopdf'] = True
+        except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+            # Try alternative paths
+            try:
+                result = subprocess.run(['/usr/bin/wkhtmltopdf', '--version'], capture_output=True, check=True, timeout=5)
+                dependencies['wkhtmltopdf'] = True
+            except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+                try:
+                    result = subprocess.run(['/usr/local/bin/wkhtmltopdf', '--version'], capture_output=True, check=True, timeout=5)
+                    dependencies['wkhtmltopdf'] = True
+                except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+                    dependencies['wkhtmltopdf'] = False
+            
+        # Check python-dotenv
+        try:
+            import dotenv
+            dependencies['dotenv'] = True
+        except ImportError:
+            dependencies['dotenv'] = False
+        
+        health_data['dependencies'] = dependencies
+        
+        # File System Checks
+        file_checks = {}
+        critical_files = [
+            'david_resume_json.json',
+            'resume_generator.py',
+            '.env'
+        ]
+        
+        for file_path in critical_files:
+            try:
+                if os.path.exists(file_path):
+                    stat_info = os.stat(file_path)
+                    file_checks[file_path] = {
+                        'exists': True,
+                        'readable': os.access(file_path, os.R_OK),
+                        'size_bytes': stat_info.st_size,
+                        'last_modified': datetime.datetime.fromtimestamp(stat_info.st_mtime).isoformat()
+                    }
+                else:
+                    file_checks[file_path] = {'exists': False}
+            except Exception as e:
+                file_checks[file_path] = {'error': str(e)}
+        
+        health_data['files'] = file_checks
+        
+        # Environment Configuration
+        env_config = {
+            'AI_PROVIDER': os.getenv('AI_PROVIDER', 'local'),
+            'OPENAI_MODEL': os.getenv('OPENAI_MODEL', 'gpt-4o-mini'),
+            'OPENAI_API_KEY_SET': bool(os.getenv('OPENAI_API_KEY')),
+            'LOCAL_LLM_BASE_URL': os.getenv('LOCAL_LLM_BASE_URL', 'http://172.28.144.1:1234/v1'),
+            'LOCAL_MODEL_NAME': os.getenv('LOCAL_MODEL_NAME', 'local-model'),
+            'FLASK_ENV': os.getenv('FLASK_ENV', 'production')
+        }
+        
+        health_data['environment'] = env_config
+        
+        # AI Provider Configuration and Connectivity
         ai_provider = os.getenv('AI_PROVIDER', 'local').lower()
-        ai_config = {}
+        ai_status = {
+            'provider': ai_provider,
+            'configured': False,
+            'connectivity_test': False
+        }
         
         if ai_provider == 'openai':
-            ai_config = {
-                'provider': 'openai',
+            api_key = os.getenv('OPENAI_API_KEY')
+            ai_status.update({
                 'model': os.getenv('OPENAI_MODEL', 'gpt-4o-mini'),
-                'api_key_configured': bool(os.getenv('OPENAI_API_KEY'))
-            }
+                'configured': bool(api_key),
+                'api_key_configured': bool(api_key)
+            })
+            
+            # Test OpenAI connectivity (optional, can be slow)
+            if api_key and OPENAI_AVAILABLE:
+                try:
+                    client = OpenAI(api_key=api_key)
+                    # Quick test call with minimal usage
+                    response = client.chat.completions.create(
+                        model=os.getenv('OPENAI_MODEL', 'gpt-4o-mini'),
+                        messages=[{"role": "user", "content": "test"}],
+                        max_tokens=1
+                    )
+                    ai_status['connectivity_test'] = True
+                    ai_status['last_test'] = datetime.datetime.utcnow().isoformat() + 'Z'
+                except Exception as e:
+                    ai_status['connectivity_test'] = False
+                    ai_status['connectivity_error'] = str(e)
         else:
-            ai_config = {
-                'provider': 'local',
-                'base_url': os.getenv('LOCAL_LLM_BASE_URL', 'http://172.28.144.1:1234/v1'),
-                'model': os.getenv('LOCAL_MODEL_NAME', 'local-model')
-            }
+            base_url = os.getenv('LOCAL_LLM_BASE_URL', 'http://172.28.144.1:1234/v1')
+            model_name = os.getenv('LOCAL_MODEL_NAME', 'local-model')
+            ai_status.update({
+                'base_url': base_url,
+                'model': model_name,
+                'configured': True  # Local LLM doesn't require API key
+            })
+            
+            # Test local LLM connectivity
+            if OPENAI_AVAILABLE:
+                try:
+                    client = OpenAI(api_key="local-key", base_url=base_url)
+                    response = client.chat.completions.create(
+                        model=model_name,
+                        messages=[{"role": "user", "content": "test"}],
+                        max_tokens=1
+                    )
+                    ai_status['connectivity_test'] = True
+                    ai_status['last_test'] = datetime.datetime.utcnow().isoformat() + 'Z'
+                except Exception as e:
+                    ai_status['connectivity_test'] = False
+                    ai_status['connectivity_error'] = str(e)
         
-        return jsonify({
-            'status': 'healthy', 
-            'message': 'Resume Optimizer API is running',
-            'ai_configuration': ai_config,
-            'features': {
-                'pdf_export': PDFKIT_AVAILABLE,
-                'validation': True,
-                'sample_template': True,
-                'text_to_json': OPENAI_AVAILABLE
-            }
-        })
+        health_data['ai_provider'] = ai_status
+        
+        # Feature Availability
+        features = {
+            'resume_optimization': FLASK_AVAILABLE,
+            'pdf_export': PDFKIT_AVAILABLE and dependencies['wkhtmltopdf'],
+            'text_to_json_parsing': OPENAI_AVAILABLE and ai_status['configured'],
+            'resume_validation': True,
+            'sample_template': file_checks.get('david_resume_json.json', {}).get('exists', False),
+            'keyword_extraction': True,
+            'ats_scoring': True
+        }
+        
+        health_data['features'] = features
+        
+        # Overall Health Assessment
+        critical_issues = []
+        warnings = []
+        
+        # Check for critical issues
+        if not FLASK_AVAILABLE:
+            critical_issues.append('Flask framework not available')
+        
+        if not file_checks.get('resume_generator.py', {}).get('exists'):
+            critical_issues.append('Core resume generator module missing')
+        
+        if not ai_status['configured']:
+            critical_issues.append('AI provider not properly configured')
+        
+        # Check for warnings
+        if not dependencies['wkhtmltopdf']:
+            warnings.append('wkhtmltopdf not available - PDF export disabled')
+        
+        if not PSUTIL_AVAILABLE:
+            warnings.append('psutil not available - system monitoring limited')
+        
+        if ai_provider == 'openai' and not ai_status.get('connectivity_test'):
+            warnings.append('OpenAI API connectivity could not be verified')
+        
+        if ai_provider == 'local' and not ai_status.get('connectivity_test'):
+            warnings.append('Local LLM connectivity could not be verified')
+        
+        # Set overall status
+        if critical_issues:
+            health_data['status'] = 'unhealthy'
+            health_data['message'] = 'Critical issues detected'
+        elif warnings:
+            health_data['status'] = 'warning'
+            health_data['message'] = 'Service operational with warnings'
+        else:
+            health_data['status'] = 'healthy'
+            health_data['message'] = 'All systems operational'
+        
+        health_data['issues'] = {
+            'critical': critical_issues,
+            'warnings': warnings
+        }
+        
+        return jsonify(health_data)
 
 def calculate_ats_score(resume_data: Dict[str, Any], role_keywords: List[str]) -> int:
     """

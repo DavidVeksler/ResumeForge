@@ -2,12 +2,22 @@ import React, { useState, useEffect } from 'react';
 import LandingPage from './components/LandingPage';
 import InputSection from './components/InputSection';
 import ResultsSection from './components/ResultsSection';
+import AdminPage from './components/AdminPage';
 import { optimizeResume } from './services/api';
 import AppStorage from './utils/storage';
 import './components/LandingPage.css';
 
 function App() {
-  const [currentStep, setCurrentStep] = useState('landing'); // 'landing', 'input', or 'results'
+  // Check URL path for routing
+  const getInitialStep = () => {
+    const path = window.location.pathname;
+    if (path === '/admin' || path === '/admin/') {
+      return 'admin';
+    }
+    return 'landing';
+  };
+  
+  const [currentStep, setCurrentStep] = useState(getInitialStep()); // 'landing', 'input', 'results', or 'admin'
   const [optimizationData, setOptimizationData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,11 +29,19 @@ function App() {
     loadPersistedData();
     setupAutoSave();
     
+    // Handle browser back/forward buttons
+    const handlePopState = () => {
+      setCurrentStep(getInitialStep());
+    };
+    
+    window.addEventListener('popstate', handlePopState);
+    
     // Cleanup on unmount
     return () => {
       if (autoSaveInterval) {
         AppStorage.disableAutoSave(autoSaveInterval);
       }
+      window.removeEventListener('popstate', handlePopState);
     };
   }, []);
 
@@ -125,6 +143,7 @@ function App() {
   const handleGetStarted = () => {
     setCurrentStep('input');
     setError(null);
+    window.history.pushState({}, '', '/');
   };
 
   const handleBackToLanding = () => {
@@ -132,6 +151,7 @@ function App() {
     setOptimizationData(null);
     setError(null);
     setLoadingStep('');
+    window.history.pushState({}, '', '/');
   };
 
   const handleBackToInput = () => {
@@ -139,6 +159,7 @@ function App() {
     setOptimizationData(null);
     setError(null);
     setLoadingStep('');
+    window.history.pushState({}, '', '/');
   };
 
   return (
@@ -176,6 +197,8 @@ function App() {
           isLoading={isLoading}
           onBackToLanding={handleBackToLanding}
         />
+      ) : currentStep === 'admin' ? (
+        <AdminPage onBackToLanding={handleBackToLanding} />
       ) : (
         <ResultsSection 
           data={optimizationData}
