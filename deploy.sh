@@ -9,7 +9,7 @@ echo "======================================"
 # Configuration
 APP_NAME="resumeforge"
 APP_USER="ubuntu"
-APP_DIR="/home/$APP_USER/ResumeForge"
+APP_DIR="/var/www/resumeforge.davidveksler.com/ResumeForge"
 PYTHON_VERSION="python3"
 
 # Colors for output
@@ -35,24 +35,6 @@ if [ "$USER" != "$APP_USER" ]; then
     print_error "This script should be run as the ubuntu user"
     exit 1
 fi
-
-# Update system packages
-print_status "Updating system packages..."
-sudo apt update && sudo apt upgrade -y
-
-# Install required system packages
-print_status "Installing system dependencies..."
-sudo apt install -y \
-    python3 \
-    python3-pip \
-    python3-venv \
-    nodejs \
-    npm \
-    nginx \
-    wkhtmltopdf \
-    curl \
-    git \
-    ufw
 
 # Create Python virtual environment
 print_status "Setting up Python virtual environment..."
@@ -97,28 +79,11 @@ print_status "Installing systemd services..."
 sudo cp $APP_DIR/resumeforge-backend.service /etc/systemd/system/
 sudo systemctl daemon-reload
 
-# Configure Nginx
-print_status "Configuring Nginx..."
-sudo cp $APP_DIR/nginx.conf /etc/nginx/sites-available/resumeforge
-sudo ln -sf /etc/nginx/sites-available/resumeforge /etc/nginx/sites-enabled/
-sudo rm -f /etc/nginx/sites-enabled/default
-
-# Test Nginx configuration
-print_status "Testing Nginx configuration..."
-sudo nginx -t
-
-# Configure firewall
-print_status "Configuring firewall..."
-sudo ufw allow 22/tcp
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw --force enable
-
 # Start and enable services
 print_status "Starting services..."
 sudo systemctl enable resumeforge-backend
 sudo systemctl start resumeforge-backend
-sudo systemctl enable nginx
+
 sudo systemctl restart nginx
 
 # Check service status
