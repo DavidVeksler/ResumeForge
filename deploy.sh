@@ -36,38 +36,38 @@ if [ "$USER" != "$APP_USER" ]; then
     exit 1
 fi
 
-# Create Python virtual environment
-print_status "Setting up Python virtual environment..."
-if [ ! -d "$APP_DIR/venv" ]; then
-    cd $APP_DIR
-    python3 -m venv venv
-    print_status "Virtual environment created"
-else
-    print_warning "Virtual environment already exists"
-fi
+# # Create Python virtual environment
+# print_status "Setting up Python virtual environment..."
+# if [ ! -d "$APP_DIR/venv" ]; then
+#     cd $APP_DIR
+#     python3 -m venv venv
+#     print_status "Virtual environment created"
+# else
+#     print_warning "Virtual environment already exists"
+# fi
 
-# Install Python dependencies
-print_status "Installing Python dependencies..."
-cd $APP_DIR
-source venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
+# # Install Python dependencies
+# print_status "Installing Python dependencies..."
+# cd $APP_DIR
+# source venv/bin/activate
+# pip install --upgrade pip
+# pip install -r requirements.txt
 
-# Install Node.js dependencies and build React app
-print_status "Installing Node.js dependencies..."
-npm install
+# # Install Node.js dependencies and build React app
+# print_status "Installing Node.js dependencies..."
+# npm install
 
-print_status "Building React application..."
-npm run build
+# print_status "Building React application..."
+# npm run build
 
-# Set up environment file
-print_status "Setting up environment configuration..."
-if [ ! -f "$APP_DIR/.env" ]; then
-    cp $APP_DIR/.env.example $APP_DIR/.env
-    print_warning "Please edit $APP_DIR/.env with your configuration"
-else
-    print_status "Environment file already exists"
-fi
+# # Set up environment file
+# print_status "Setting up environment configuration..."
+# if [ ! -f "$APP_DIR/.env" ]; then
+#     cp $APP_DIR/.env.example $APP_DIR/.env
+#     print_warning "Please edit $APP_DIR/.env with your configuration"
+# else
+#     print_status "Environment file already exists"
+# fi
 
 # Set correct permissions
 print_status "Setting file permissions..."
