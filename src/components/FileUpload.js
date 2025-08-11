@@ -110,6 +110,7 @@ const FileUpload = ({ onFileUpload, fileName, disabled }) => {
 
   const handleDownloadSample = async (e) => {
     e.preventDefault();
+    e.stopPropagation(); // Prevent event bubbling to parent div
     setError(''); // Clear any existing errors
     setIsDownloadingSample(true);
     
