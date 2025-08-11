@@ -5,6 +5,16 @@
   line-height: 1.6;
 }
 
+/* Global design improvements */
+body {
+  background-color: #fafbfc;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+}
+
 /* Navigation */
 .navbar {
   backdrop-filter: blur(10px);
@@ -29,12 +39,13 @@
 
 /* Hero Section */
 .hero-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 100%);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
   color: white;
   position: relative;
   overflow: hidden;
+  min-height: 80vh;
 }
 
 .hero-section::before {
@@ -44,7 +55,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.2) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -57,14 +71,16 @@
 .hero-content {
   position: relative;
   z-index: 2;
+  padding-top: 2rem;
 }
 
 .hero-stats {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  padding: 1.5rem;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .stat-item .h3 {
@@ -73,9 +89,11 @@
 }
 
 .hero-form .input-group {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  border-radius: 50px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  border-radius: 60px;
   overflow: hidden;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
 }
 
 .hero-form .form-control {
@@ -88,6 +106,14 @@
   border: none;
   font-weight: 600;
   white-space: nowrap;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: all 0.3s ease;
+}
+
+.hero-form .btn:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
 }
 
 /* Resume Preview Mockup */
@@ -208,37 +234,82 @@
 
 /* Features Section */
 .features-section {
-  background: #f8f9fa;
+  background: linear-gradient(180deg, #fafbfc 0%, #f8f9fa 100%);
+  position: relative;
+}
+
+.features-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(118, 75, 162, 0.05) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .feature-card {
   background: white;
   padding: 2.5rem 2rem;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   text-align: center;
   height: 100%;
-  transition: all 0.3s ease;
-  border: 1px solid #e9ecef;
+  transition: all 0.4s ease;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.feature-card:hover::before {
+  opacity: 1;
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  border-color: #0d6efd;
+  transform: translateY(-8px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.feature-card > * {
+  position: relative;
+  z-index: 2;
 }
 
 .feature-icon {
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20px;
+  border-radius: 25px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.5rem;
-  font-size: 2rem;
+  font-size: 2.2rem;
   color: white;
+  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.25);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.35);
 }
 
 .feature-card h4 {
@@ -267,24 +338,47 @@
   position: relative;
   padding: 3rem 2rem;
   background: white;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s ease;
   height: 100%;
+  overflow: hidden;
+}
+
+.step-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.step-card:hover::before {
+  opacity: 1;
+}
+
+.step-card > * {
+  position: relative;
+  z-index: 2;
 }
 
 .step-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
 }
 
 .step-number {
   position: absolute;
-  top: -20px;
+  top: -25px;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border-radius: 50%;
@@ -292,7 +386,8 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
 .step-icon {
@@ -316,16 +411,41 @@
 .testimonial-card {
   background: white;
   padding: 2.5rem 2rem;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   height: 100%;
-  transition: all 0.3s ease;
-  border-left: 4px solid #0d6efd;
+  transition: all 0.4s ease;
+  border-left: 4px solid #667eea;
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.testimonial-card:hover::before {
+  opacity: 1;
+}
+
+.testimonial-card > * {
+  position: relative;
+  z-index: 2;
 }
 
 .testimonial-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+  border-left-color: #764ba2;
 }
 
 .testimonial-rating {
@@ -371,11 +491,28 @@
 
 /* Stats Section */
 .stats-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 20%, rgba(120, 119, 198, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(255, 119, 198, 0.2) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .stat-item {
-  padding: 1rem;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 2;
 }
 
 .stat-number {
@@ -390,8 +527,21 @@
 
 /* Final CTA Section */
 .final-cta-section {
-  background: #f8f9fa;
+  background: linear-gradient(180deg, #f8f9fa 0%, #fafbfc 100%);
   padding: 5rem 0;
+  position: relative;
+}
+
+.final-cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 50%, rgba(102, 126, 234, 0.03) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .cta-buttons .btn {
@@ -496,20 +646,22 @@ html {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f8f9fa;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 10px;
+  border: 2px solid #f8f9fa;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
 }
 
 /* Animation Utilities */

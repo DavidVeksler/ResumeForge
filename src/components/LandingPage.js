@@ -59,7 +59,7 @@ const LandingPage = ({ onGetStarted }) => {
       {/* Hero Section */}
       <section id="home" className="hero-section">
         <div className="container">
-          <div className="row align-items-center min-vh-100 py-5">
+          <div className="row align-items-center py-4">
             <div className="col-lg-6">
               <div className="hero-content">
                 <div className="badge bg-primary-subtle text-primary mb-3">
