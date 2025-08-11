@@ -1,0 +1,262 @@
+{
+  "personal": {
+    "name": "David Veksler",
+    "email": "davidleoveksler@gmail.com",
+    "phone": "+1 470-424-0056",
+    "location": "Denver, Colorado",
+    "linkedin": "linkedin.com/in/davidveksler",
+    "github": "github.com/davidveksler"
+  },
+  "summary": {
+    "headline": "Senior FinTech Engineering Executive with 20+ years building scalable financial platforms and leading global teams. Proven expertise in blockchain technology, DeFi protocols, payment systems, and regulatory compliance including GDPR, PCI DSS, and SOX. Track record of managing $100M+ digital assets and scaling engineering teams across multiple countries with performance-driven architecture.",
+    "bullets": [
+      "Engineering Leadership & Management: Built and scaled high-performance teams of 20+ engineers across 3 countries with mentoring and agile coaching",
+      "FinTech Expertise: Architected payment systems, DeFi protocols, and trading platforms managing $100M+ assets",
+      "Full-Stack Development: Delivered 7+ enterprise applications using modern tech stack (React, .NET Core, Python, JavaScript, TypeScript) with RESTful API architecture",
+      "Blockchain & DeFi: Led wrapped token projects, yield strategies, Layer 2 solutions, and integration with major DeFi protocols including Chainlink oracles and TVL optimization"
+    ]
+  },
+  "experience": [
+    {
+      "title": "Senior Software Engineering Manager",
+      "company": "Celsius Network",
+      "location": "Denver",
+      "duration": "Mar 2022 - Sep 2024",
+      "description": "DeFi & CyberDefense teams",
+      "achievements": [
+        {
+          "text": "Led wrapped token projects including cxBTC with $100M TVL, implementing DeFi yield strategies on Ethereum and Polygon networks",
+          "keywords": ["defi", "tvl", "ethereum", "polygon", "yield", "trading", "wrapped_tokens"],
+          "metrics": {"value": 100000000, "type": "assets_managed"}
+        },
+        {
+          "text": "Scaled three international development teams from 15 to 24 engineers across US, Serbia, and Romania with agile leadership, mentoring, and performance management",
+          "keywords": ["team_leadership", "scaling", "international", "engineering_management", "agile", "mentoring", "performance", "leadership"],
+          "metrics": {"from": 15, "to": 24, "type": "team_growth"}
+        },
+        {
+          "text": "Orchestrated cross-functional collaboration to launch wrapped token projects with Chainlink proof-of-reserve oracles for regulatory compliance including AML, KYC, and financial regulations",
+          "keywords": ["chainlink", "oracles", "compliance", "tokenization", "regulatory", "aml", "kyc", "financial"],
+          "metrics": {}
+        },
+        {
+          "text": "Integrated MetaMask with Celsius wallet, improving user experience for DeFi interactions and increasing user engagement",
+          "keywords": ["metamask", "wallet", "user_experience", "defi", "integration"],
+          "metrics": {}
+        },
+        {
+          "text": "Built FireBlocks API clients to audit 5M+ customer vaults across 20+ EVM networks, recovering $4M+ in unsupported assets with high-performance systems architecture",
+          "keywords": ["fireblocks", "custody", "audit", "evm", "asset_recovery", "api", "systems", "performance", "architecture"],
+          "metrics": {"customers": 5000000, "networks": 20, "recovered": 4000000}
+        }
+      ]
+    },
+    {
+      "title": "Chief Technology Officer",
+      "company": "Royalty Exchange",
+      "location": "Denver",
+      "duration": "Jan 2020 - Oct 2021",
+      "description": "",
+      "achievements": [
+        {
+          "text": "Migrated platform to Django REST Framework, ReactJS, PostgreSQL on AWS with GCP integration, doubling system performance and reducing operational costs through scalable architecture",
+          "keywords": ["django", "react", "postgresql", "aws", "gcp", "migration", "performance", "architecture", "scalability"],
+          "metrics": {"improvement": "2x", "type": "performance"}
+        },
+        {
+          "text": "Integrated payment systems using Stripe & Plaid APIs for credit card & ACH processing with PCI DSS compliance, reducing manual support workload by 60%",
+          "keywords": ["stripe", "plaid", "payments", "ach", "fintech", "automation", "pci", "pci dss", "compliance"],
+          "metrics": {"reduction": "60%", "type": "support_workload"}
+        },
+        {
+          "text": "Implemented Scrum/agile practices and CI/CD pipelines with GitHub Actions, accelerating release cadence to weekly deployments and improving development processes",
+          "keywords": ["scrum", "agile", "deployment", "ci_cd", "devops", "github actions", "development"],
+          "metrics": {"cadence": "weekly", "type": "deployment_frequency"}
+        },
+        {
+          "text": "Developed first Ethereum NFT product paying crypto for real-world music royalties (ASCAP/BMI), pioneering Web3 royalty payments",
+          "keywords": ["nft", "ethereum", "royalties", "ascap", "bmi", "crypto", "web3"],
+          "metrics": {}
+        }
+      ]
+    },
+    {
+      "title": "Director of Technology",
+      "company": "Foundation for Economic Education",
+      "location": "Atlanta",
+      "duration": "Dec 2015 - Jan 2020",
+      "description": "",
+      "achievements": [
+        {
+          "text": "Built and led technology team of 12+ developers, designers, QA, and product experts across full software development lifecycle with agile management and mentoring",
+          "keywords": ["team_building", "leadership", "product_management", "sdlc", "agile", "management", "mentoring"],
+          "metrics": {"team_size": 12, "type": "team_leadership"}
+        },
+        {
+          "text": "Engineered $3M social media analytics platform with 1M+ data points daily using Python and JavaScript, open-sourced and presented at national conferences",
+          "keywords": ["analytics", "social_media", "open_source", "big_data", "python", "javascript", "data"],
+          "metrics": {"value": 3000000, "data_points": 1000000, "type": "platform_value"}
+        },
+        {
+          "text": "Implemented domain-driven design architecture using Bootstrap, HTML5, JavaScript ES6, Webpack, and React for scalable applications",
+          "keywords": ["ddd", "bootstrap", "javascript", "webpack", "react", "architecture"],
+          "metrics": {}
+        },
+        {
+          "text": "Deployed RESTful APIs using ASP.NET Core across Windows and Linux platforms in AWS with 99.9% uptime, implementing high-performance architecture and authentication systems",
+          "keywords": ["rest_api", "asp_net", "aws", "linux", "windows", "uptime", "performance", "architecture", "authentication", "restful"],
+          "metrics": {"uptime": "99.9%", "type": "reliability"}
+        }
+      ]
+    },
+    {
+      "title": "Software Architect",
+      "company": "EF Education First",
+      "location": "Shanghai",
+      "duration": "Jan 2011 - Nov 2015",
+      "description": "",
+      "achievements": [
+        {
+          "text": "Led agile teams of 8+ developers creating web and mobile applications using .NET/C#, JavaScript, ReactJS, SQL Server for global markets with leadership and architectural design",
+          "keywords": ["agile", "mobile", "dotnet", "javascript", "react", "sql_server", "global", "leadership", "design", "architect"],
+          "metrics": {"team_size": 8, "type": "team_leadership"}
+        },
+        {
+          "text": "Implemented Scrum methodology, continuous integration, Git workflows, and code review practices, improving code quality by 40%",
+          "keywords": ["scrum", "ci", "git", "code_review", "quality"],
+          "metrics": {"improvement": "40%", "type": "code_quality"}
+        },
+        {
+          "text": "Built and launched 3 web applications and 2 mobile apps for internal and external customers, serving 100K+ users",
+          "keywords": ["web_apps", "mobile_apps", "product_delivery", "user_base"],
+          "metrics": {"web_apps": 3, "mobile_apps": 2, "users": 100000, "type": "applications_delivered"}
+        },
+        {
+          "text": "Led migration from on-premise datacenter to Amazon Web Services cloud platform with PostgreSQL and MySQL databases, reducing infrastructure costs by 35%",
+          "keywords": ["cloud_migration", "aws", "datacenter", "cost_optimization", "postgresql", "mysql"],
+          "metrics": {"cost_reduction": "35%", "type": "infrastructure_savings"}
+        }
+      ]
+    },
+    {
+      "title": "Senior Application Engineer",
+      "company": "Match.com",
+      "location": "Dallas",
+      "duration": "Aug 2008 - Oct 2010",
+      "description": "",
+      "achievements": [
+        {
+          "text": "First developer on Match.com mobile division, building iOS and Palm webOS applications that reached 1M+ downloads",
+          "keywords": ["mobile", "ios", "webos", "startup", "product_launch"],
+          "metrics": {"downloads": 1000000, "type": "user_adoption"}
+        },
+        {
+          "text": "Built secure mobile APIs (C#/.NET/SQL Server) for iPhone, Windows Phone, and Android platforms with OAuth 2.0 authentication",
+          "keywords": ["mobile_api", "security", "dotnet", "cross_platform", "oauth"],
+          "metrics": {}
+        },
+        {
+          "text": "Developed scalable SMS notification platform reaching 12+ million Match.com users with 99.5% delivery rate",
+          "keywords": ["sms", "notifications", "scalability", "messaging"],
+          "metrics": {"users": 12000000, "delivery_rate": "99.5%", "type": "user_reach"}
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "CelsiusX Wrapped Bitcoin (cxBTC)",
+      "description": "Wrapped Bitcoin asset on Polygon with institutional-grade security",
+      "achievements": [
+        "Architected $100M TVL wrapped Bitcoin asset bridging CeFi and DeFi ecosystems",
+        "Integrated Chainlink Proof of Reserve for transparency and security",
+        "Built real-time, fee-free conversion between native and wrapped assets"
+      ],
+      "keywords": ["wrapped_bitcoin", "defi", "chainlink", "polygon", "tvl", "cefi"]
+    },
+    {
+      "name": "JellyFish Insights Analytics Platform",
+      "description": "Open-source social media analytics for non-profits",
+      "achievements": [
+        "Built multi-platform social media analytics tool processing 1M+ data points daily",
+        "Developed custom BI features with data ownership and advanced reporting capabilities",
+        "Presented at national conferences showcasing innovative data aggregation techniques"
+      ],
+      "keywords": ["analytics", "open_source", "social_media", "bi", "data_processing"]
+    },
+    {
+      "name": "Match.com Mobile Ecosystem",
+      "description": "Mobile API architecture and apps for dating platform",
+      "achievements": [
+        "Designed Match.com's mobile API architecture for iOS, Android, WebOS, and Windows Phone",
+        "Built SMS system reaching 12M+ users for engagement and retention campaigns",
+        "Optimized API performance and caching, improving app response times by 5x+"
+      ],
+      "keywords": ["mobile_api", "sms", "performance", "caching", "cross_platform"]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Master of Science in Management of Information Systems (MSIS)",
+      "school": "Mays Business School - Texas A&M University",
+      "duration": "2003 - 2004",
+      "type": "masters"
+    },
+    {
+      "degree": "Data Science Certificate",
+      "school": "General Assembly",
+      "duration": "2016",
+      "description": "Python programming, research design, data modeling, machine learning",
+      "type": "certificate"
+    },
+    {
+      "degree": "Bachelor of Science, Economics & Political Science (dual-major)",
+      "school": "Texas A&M University",
+      "duration": "1999 - 2003",
+      "type": "bachelors"
+    }
+  ],
+  "skills": {
+    "programming_languages": {
+      "expert": ["C#", ".NET Framework", ".NET Core", "SQL", "HTML/CSS"],
+      "proficient": ["TypeScript", "JavaScript", "Python"],
+      "familiar": ["Node.js", "Solidity", "PHP", "Rust", "Objective-C"]
+    },
+    "web_technologies": {
+      "frontend": ["React", "HTML5", "CSS3", "Bootstrap", "Webpack"],
+      "backend": ["ASP.NET Core", "Blazor", "Node.js", "Django", "WordPress"],
+      "api": ["RESTful", "SOAP", "Swagger/OpenAPI", "API versioning", "CORS"]
+    },
+    "blockchain": {
+      "platforms": ["Bitcoin", "Ethereum", "Polygon", "Layer 2 solutions", "Web3"],
+      "tools": ["Web3.js", "Ethers.js", "MetaMask API", "MEV", "Truffle", "Chainlink"],
+      "architecture": ["Trading engines", "Market making", "DeFi yield strategies", "Multisig custody", "Blockchain oracles", "TVL optimization"]
+    },
+    "cloud_devops": {
+      "platforms": ["AWS (EC2, S3, RDS, ElastiCache, Lambda)", "GCP", "Azure", "Cloudflare"],
+      "cicd": ["TeamCity", "GitHub Actions", "Docker", "Kubernetes", "Jenkins"],
+      "databases": ["SQL Server", "PostgreSQL", "MySQL", "Redis", "Elasticsearch", "InfluxDB"]
+    },
+    "fintech": {
+      "payments": ["Stripe", "Plaid", "PayPal", "ACH", "ATM payouts", "Payment systems"],
+      "compliance": ["KYC/AML", "GDPR", "PCI DSS", "CCPA", "SOX", "Financial regulations"],
+      "security": ["OAuth 2.0", "JWT", "SSO", "2FA", "Authentication", "Custody providers"]
+    },
+    "methodologies": {
+      "agile": ["Scrum", "Kanban", "SAFe", "Lean", "XP"],
+      "architecture": ["Domain-driven design", "Event-driven architecture", "Microservices", "CQRS"],
+      "testing": ["TDD", "Automated testing", "Selenium"]
+    },
+    "leadership": {
+      "tools": ["JIRA", "Trello", "Figma", "Notion"],
+      "management": ["Team mentoring", "Performance reviews", "Agile coaching", "International teams", "Engineering management", "Leadership"]
+    }
+  },
+  "keywords": {
+    "fintech_primary": ["fintech", "financial technology", "payments", "trading systems", "defi", "blockchain", "cryptocurrency"],
+    "fintech_secondary": ["kyc", "aml", "compliance", "risk management", "custody", "oracles", "yield strategies"],
+    "technical_primary": ["software engineering", "full stack", "api development", "cloud architecture", "team leadership"],
+    "technical_secondary": ["agile", "scrum", "ci/cd", "microservices", "scalability", "performance optimization"],
+    "industry_buzzwords": ["tvl", "wrapped tokens", "proof of reserve", "evm", "layer 2", "smart contracts"]
+  }
+}

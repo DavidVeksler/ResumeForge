@@ -12,7 +12,7 @@ This application is **ready for Ubuntu server deployment** with the provided aut
 ### One-Command Deployment
 ```bash
 # Clone the repository
-git clone <your-repo-url> /home/ubuntu/ResumeForge
+git clone https://github.com/DavidVeksler/ResumeForge /home/ubuntu/ResumeForge
 cd /home/ubuntu/ResumeForge
 
 # Run the deployment script
