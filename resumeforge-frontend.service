@@ -1,0 +1,13 @@
+[Unit]
+Description=ResumeForge Frontend (Nginx)
+After=network.target resumeforge-backend.service
+Requires=resumeforge-backend.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/true
+WorkingDirectory=/home/ubuntu/ResumeForge
+
+[Install]
+WantedBy=multi-user.target

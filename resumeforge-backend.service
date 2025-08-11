@@ -1,0 +1,24 @@
+[Unit]
+Description=ResumeForge Backend API
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=ubuntu
+ExecStart=/home/ubuntu/ResumeForge/venv/bin/python /home/ubuntu/ResumeForge/app.py
+WorkingDirectory=/home/ubuntu/ResumeForge
+Environment=PATH=/home/ubuntu/ResumeForge/venv/bin
+Environment=FLASK_ENV=production
+Environment=FLASK_DEBUG=False
+Environment=PYTHONPATH=/home/ubuntu/ResumeForge
+Environment=PORT=5000
+EnvironmentFile=-/home/ubuntu/ResumeForge/.env
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=resumeforge-backend
+
+[Install]
+WantedBy=multi-user.target
