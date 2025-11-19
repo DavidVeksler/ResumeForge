@@ -98,7 +98,8 @@ export const useJobDescription = () => {
     setDescription('');
   }, [setDescription]);
 
-  const isValid = description.trim().length > 50;
+  // Match backend validation: minimum 50 words (not characters)
+  const isValid = wordCount >= 50;
 
   return {
     value: description,

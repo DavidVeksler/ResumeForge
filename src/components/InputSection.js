@@ -78,13 +78,12 @@ const InputSection = ({ onOptimize, isLoading, onBackToLanding }) => {
     jobDescState.setValue(value);
     setError('');
 
-    if (value.trim() && value !== jobDescState.value) {
-      // Add to recent jobs if it's substantial
-      if (value.split(/\s+/).length > 50) {
-        const preview = value.slice(0, 100) + '...';
-        AppStorage.addRecentJob({ description: value, preview });
-        setRecentJobs(AppStorage.getRecentJobs());
-      }
+    // Add to recent jobs if it's substantial (50+ words)
+    const wordCount = value.trim().split(/\s+/).length;
+    if (value.trim() && wordCount >= 50) {
+      const preview = value.slice(0, 100) + '...';
+      AppStorage.addRecentJob({ description: value, preview });
+      setRecentJobs(AppStorage.getRecentJobs());
     }
   };
 
@@ -106,7 +105,7 @@ const InputSection = ({ onOptimize, isLoading, onBackToLanding }) => {
     }
 
     if (!jobDescState.isValid) {
-      setError('Job description must be at least 50 characters');
+      setError(`Job description must be at least 50 words (currently ${jobDescState.wordCount} words)`);
       return;
     }
 
@@ -237,7 +236,7 @@ const InputSection = ({ onOptimize, isLoading, onBackToLanding }) => {
                   disabled={isLoading}
                 />
                 <small className="text-muted">
-                  Word count: {jobDescState.wordCount} {!jobDescState.isValid && '(minimum 50 characters)'}
+                  Word count: {jobDescState.wordCount} {!jobDescState.isValid && '(minimum 50 words)'}
                 </small>
               </div>
 

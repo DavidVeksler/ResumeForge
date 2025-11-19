@@ -3,7 +3,7 @@ Keyword Extractor - Extract keywords from job descriptions and resumes
 """
 
 import re
-from typing import List, Set
+from typing import List
 from config.patterns import PRIORITY_PATTERNS, STOP_WORDS
 
 

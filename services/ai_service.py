@@ -4,7 +4,7 @@ AI Service - Handles AI provider configuration and text-to-JSON conversion
 
 import json
 import os
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 try:
     from openai import OpenAI

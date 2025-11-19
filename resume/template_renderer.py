@@ -3,7 +3,7 @@ Template Renderer - Generate HTML from resume data
 """
 
 import os
-from typing import Dict, List, Any
+from typing import Dict, Any
 
 
 class TemplateRenderer:
@@ -45,14 +45,30 @@ class TemplateRenderer:
     def _load_template(self) -> str:
         """Load HTML template"""
         template_path = os.path.join(self.TEMPLATE_DIR, 'template.html')
-        with open(template_path, 'r') as f:
-            return f.read()
+        try:
+            with open(template_path, 'r') as f:
+                return f.read()
+        except FileNotFoundError:
+            raise FileNotFoundError(
+                f"Template file not found at {template_path}. "
+                "Ensure template.html exists in the project root directory."
+            )
+        except IOError as e:
+            raise IOError(f"Failed to read template file: {e}")
 
     def _load_css(self) -> str:
         """Load CSS content"""
         css_path = os.path.join(self.TEMPLATE_DIR, 'template.css')
-        with open(css_path, 'r') as f:
-            return f.read()
+        try:
+            with open(css_path, 'r') as f:
+                return f.read()
+        except FileNotFoundError:
+            raise FileNotFoundError(
+                f"CSS file not found at {css_path}. "
+                "Ensure template.css exists in the project root directory."
+            )
+        except IOError as e:
+            raise IOError(f"Failed to read CSS file: {e}")
 
     def _build_keywords(self) -> str:
         """Build ATS keywords string"""

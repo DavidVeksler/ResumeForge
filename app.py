@@ -28,7 +28,6 @@ except ImportError as e:
 import json
 import os
 import tempfile
-from typing import Dict, Any
 
 # Load environment variables
 try:

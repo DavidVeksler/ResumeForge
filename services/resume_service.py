@@ -2,8 +2,8 @@
 Resume Service - Handles resume generation and optimization
 """
 
-from typing import Dict, Any, Tuple
-from resume_generator import ResumeGenerator, extract_keywords_from_job_description
+from typing import Dict, Any, Tuple, List
+from resume.generator import ResumeGenerator, extract_keywords_from_job_description
 
 
 class ResumeService:
@@ -13,7 +13,7 @@ class ResumeService:
     def optimize_resume(
         resume_data: Dict[str, Any],
         job_description: str
-    ) -> Tuple[str, str, Dict[str, Any], list]:
+    ) -> Tuple[str, str, Dict[str, Any], List[str]]:
         """
         Optimize resume for a specific job description
 
