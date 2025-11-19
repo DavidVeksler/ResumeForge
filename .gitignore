@@ -346,3 +346,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ResumeForge specific
+# Backup files from refactoring
+*_original.py
+*Original.js
+*Original.jsx
+
+# Generated resume files
+resume_ats_*.html
+resume_*.html
