@@ -1,0 +1,108 @@
+{
+  "hero": {
+    "badge": "AI-Powered Resume Optimization",
+    "title": "Beat ATS Systems & Land Your Dream Job",
+    "description": "Our AI analyzes job descriptions and optimizes your resume for maximum ATS compatibility. Increase your interview callbacks by 300% with personalized keyword matching and professional formatting.",
+    "emailPlaceholder": "Enter your email to get started",
+    "ctaText": "Start Optimizing",
+    "trustText": "Free to start • No credit card required • Results in 30 seconds"
+  },
+  "stats": [
+    { "value": "95%", "label": "ATS Score" },
+    { "value": "10K+", "label": "Resumes Optimized" },
+    { "value": "3x", "label": "More Interviews" }
+  ],
+  "features": [
+    {
+      "id": 1,
+      "icon": "bi-robot",
+      "title": "AI-Powered Analysis",
+      "description": "Advanced AI analyzes job descriptions to extract key requirements and optimize your resume accordingly."
+    },
+    {
+      "id": 2,
+      "icon": "bi-search",
+      "title": "ATS Optimization",
+      "description": "Ensure your resume passes Applicant Tracking Systems with optimized keywords and formatting."
+    },
+    {
+      "id": 3,
+      "icon": "bi-graph-up-arrow",
+      "title": "Score Improvement",
+      "description": "See your ATS score improve in real-time as we optimize your resume for specific job postings."
+    },
+    {
+      "id": 4,
+      "icon": "bi-file-earmark-check",
+      "title": "Professional Templates",
+      "description": "Choose from professionally designed templates that are both ATS-friendly and visually appealing."
+    },
+    {
+      "id": 5,
+      "icon": "bi-lightning-charge",
+      "title": "Instant Results",
+      "description": "Get your optimized resume in seconds, not hours. Our AI works at lightning speed."
+    },
+    {
+      "id": 6,
+      "icon": "bi-shield-check",
+      "title": "Privacy Focused",
+      "description": "Your data is secure and private. We never share your information with third parties."
+    }
+  ],
+  "howItWorks": [
+    {
+      "step": 1,
+      "icon": "bi-upload",
+      "title": "Upload Resume",
+      "description": "Paste your existing resume or upload a file. Our AI understands all formats."
+    },
+    {
+      "step": 2,
+      "icon": "bi-file-text",
+      "title": "Add Job Description",
+      "description": "Copy and paste the job description you're applying for."
+    },
+    {
+      "step": 3,
+      "icon": "bi-magic",
+      "title": "AI Optimization",
+      "description": "Our AI analyzes and optimizes your resume for maximum ATS compatibility."
+    },
+    {
+      "step": 4,
+      "icon": "bi-download",
+      "title": "Download & Apply",
+      "description": "Get your optimized resume and start applying with confidence."
+    }
+  ],
+  "testimonials": [
+    {
+      "id": 1,
+      "name": "Sarah Chen",
+      "role": "Senior Software Engineer",
+      "company": "TechCorp",
+      "rating": 5,
+      "text": "My ATS score went from 65% to 94% after using this tool. I got 3 interview calls within a week!",
+      "avatar": "SC"
+    },
+    {
+      "id": 2,
+      "name": "Michael Rodriguez",
+      "role": "Product Manager",
+      "company": "StartupXYZ",
+      "rating": 5,
+      "text": "The AI-powered keyword matching is incredible. It found opportunities to highlight my experience that I completely missed.",
+      "avatar": "MR"
+    },
+    {
+      "id": 3,
+      "name": "Emily Thompson",
+      "role": "Marketing Director",
+      "company": "Global Inc",
+      "rating": 5,
+      "text": "Best investment in my job search. The optimized resume helped me land my dream job at a Fortune 500 company.",
+      "avatar": "ET"
+    }
+  ]
+}
