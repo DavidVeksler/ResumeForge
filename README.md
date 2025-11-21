@@ -1,89 +1,90 @@
-# AI Resume Optimizer
+# ResumeForge
 
-A professional full-stack web application that uses AI to optimize resumes for Applicant Tracking Systems (ATS). Features a modern landing page, intelligent text-to-JSON conversion, comprehensive data persistence, and advanced keyword matching for maximum interview callback rates.
+AI-powered resume optimizer that uses intelligent keyword matching and ATS (Applicant Tracking System) optimization to maximize interview callbacks.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.8+
 - Node.js 16+
-- npm
-- **AI Provider**: Choose one of:
-  - OpenAI API key (recommended for production)
-  - Local LLM setup (LM Studio for privacy/offline use)
+- OpenAI API key (for AI text-to-JSON conversion) **OR** Local LLM setup
 
-### Installation & Setup
-
-1. **Validate Environment**
-   ```bash
-   ./setup_dev.sh
-   ```
-
-2. **Install Dependencies (if needed)**
-   ```bash
-   # For full functionality with Flask dependencies
-   ./install_dependencies.sh
-   
-   # Optional: Install PDF support
-   ./install_pdf_support.sh
-   ```
-
-3. **Configure AI Provider**
-   ```bash
-   # Copy and edit environment configuration
-   cp .env.example .env
-   # Edit .env to set your AI provider and credentials
-   ```
-
-4. **Start Backend** (Terminal 1)
-   ```bash
-   ./start_backend.sh
-   # Automatically falls back to simple server if Flask dependencies unavailable
-   ```
-
-5. **Start Frontend** (Terminal 2)
-   ```bash
-   ./start_frontend.sh
-   # Installs npm dependencies automatically
-   ```
-
-6. **Open Application**
-   ```
-   Backend:  http://localhost:5000
-   Frontend: http://localhost:3000
-   ```
-
-### Basic Usage (No Dependencies Required)
-
-For quick resume generation without web interface:
+### 1. Install & Configure
 
 ```bash
-# Generate default resume
-python3 resume_generator.py
+# Clone the repository
+git clone https://github.com/DavidVeksler/ResumeForge
+cd ResumeForge
 
-# Generate job-customized resume
-python3 resume_generator.py david_resume_json.json ats job_description.txt
+# Install dependencies
+./install_dependencies.sh
+
+# Configure AI provider
+cp .env.example .env
+# Edit .env and add your OPENAI_API_KEY or configure local LLM
 ```
 
-## 🤖 AI Provider Configuration
+### 2. Start the Application
 
-The application supports two AI providers for text-to-JSON resume conversion:
+**Option A: Simple One-Command Start**
+```bash
+./start.sh
+```
+This starts both backend and frontend in a single terminal.
+
+**Option B: Separate Terminals (Recommended for Development)**
+```bash
+# Terminal 1: Backend
+./start_backend.sh
+
+# Terminal 2: Frontend
+./start_frontend.sh
+```
+
+### 3. Open the Application
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000
+
+## Features
+
+### Resume Optimization
+- **Smart Keyword Matching**: Analyzes job descriptions and reorders achievements by relevance
+- **ATS Score Tracking**: Compare default vs. optimized resume scores
+- **Achievement Ranking**: Dynamically prioritizes your most relevant experience
+
+### Resume Input Methods
+- **JSON Upload**: Structured resume data for precise control
+- **AI Text-to-JSON Conversion**: Paste any text resume and convert it automatically
+- **Sample Templates**: Download example resume format
+
+### Export Options
+- PDF export (requires wkhtmltopdf)
+- HTML download
+- Print-ready formatting
+
+### Modern Web Interface
+- Professional landing page
+- Real-time validation
+- Auto-save functionality
+- Responsive design (mobile/tablet/desktop)
+
+## AI Provider Configuration
+
+ResumeForge supports two AI providers for text-to-JSON conversion:
 
 ### OpenAI API (Recommended)
 ```bash
 # In .env file:
 AI_PROVIDER=openai
-OPENAI_API_KEY=your-openai-api-key-here
-OPENAI_MODEL=gpt-4o-mini  # or gpt-4, gpt-3.5-turbo
+OPENAI_API_KEY=your-api-key-here
+OPENAI_MODEL=gpt-4o-mini
 ```
 
 **Benefits:**
-- High accuracy and consistency
-- Fast processing (~3-5 seconds)
-- No local setup required
+- High accuracy (~3-5 seconds per conversion)
+- No local setup
 - Production-ready
-
-**Cost:** ~$0.15-0.60 per 1K tokens (very affordable for resume processing)
+- Cost: ~$0.15-0.60 per 1K tokens
 
 ### Local LLM (Privacy & Offline)
 ```bash
@@ -94,252 +95,196 @@ LOCAL_MODEL_NAME=local-model
 ```
 
 **Benefits:**
-- Complete data privacy
+- Complete privacy
 - No API costs
 - Offline operation
-- Full control over model
 
 **Requirements:**
 1. Install [LM Studio](https://lmstudio.ai/)
 2. Download a model (Llama 3.1, Mistral, etc.)
 3. Start local server
 
-### Testing Your Configuration
-```bash
-# Test both providers
-python3 test_ai_providers.py
-
-# Interactive demonstration
-python3 demo_ai_switching.py
-```
-
-## 📁 Project Structure
+## Project Structure
 
 ```
-src/
-├── 📄 Core Backend Files
-│   ├── app.py                    # Flask REST API server
-│   ├── resume_generator.py       # Resume processing engine
-│   ├── run_app.py               # Application runner
-│   └── requirements.txt         # Python dependencies
+ResumeForge/
+├── app.py                    # Flask REST API server
+├── resume_generator.py       # Core resume processing engine
+├── run_app.py               # Application runner
+├──
+├── src/                     # React frontend
+│   ├── components/          # UI components
+│   ├── services/           # API integration
+│   └── utils/              # Storage management
 │
-├── 📊 Data & Templates
-│   ├── david_resume_json.json   # Resume data (JSON format)
-│   ├── template.html            # HTML resume template
-│   └── template.css             # Resume styling
+├── services/               # Backend services
+│   ├── ai_service.py       # AI provider integration
+│   ├── resume_service.py   # Resume processing
+│   └── scoring_service.py  # ATS scoring
 │
-├── ⚛️ React Frontend
-│   ├── src/
-│   │   ├── App.js              # Main React application with routing
-│   │   ├── components/         # UI components
-│   │   │   ├── LandingPage.js  # Professional landing page
-│   │   │   ├── Dashboard.js    # ATS scoring dashboard
-│   │   │   ├── FileUpload.js   # File upload with validation
-│   │   │   ├── InputSection.js # Job description input with storage
-│   │   │   ├── ResultsSection.js # Results display
-│   │   │   ├── ResumeDisplay.js # Resume preview
-│   │   │   ├── TextResumeInput.js # AI text-to-JSON conversion
-│   │   │   └── StorageDebugger.js # Storage management tool
-│   │   ├── services/
-│   │   │   └── api.js          # API service layer
-│   │   ├── utils/
-│   │   │   └── storage.js      # Browser storage management
-│   │   ├── index.js            # React entry point
-│   │   ├── index.css           # Application styles
-│   │   └── components/LandingPage.css # Landing page styles
-│   ├── public/
-│   │   └── index.html          # HTML template
-│   └── package.json            # Node dependencies
+├── Startup Scripts
+│   ├── start.sh            # Quick start (combined)
+│   ├── start_backend.sh    # Backend only
+│   ├── start_frontend.sh   # Frontend only
+│   ├── setup_dev.sh        # Environment validation
+│   └── install_dependencies.sh
 │
-├── 🛠️ Utility Scripts
-│   ├── setup_dev.sh            # Development environment validation
-│   ├── install_pdf_support.sh  # PDF export setup
-│   ├── start_backend.sh        # Backend startup script
-│   └── start_frontend.sh       # Frontend startup script
-│
-└── 📚 Documentation
-    └── CLAUDE.md               # Project instructions for AI assistance
+└── Documentation
+    ├── README.md           # This file
+    ├── CLAUDE.md          # Technical architecture
+    └── DEPLOYMENT.md      # Production deployment
 ```
 
-## ✨ Key Features
-
-### 📤 **Resume Input Options**
-- **JSON Upload**: Drag & drop structured JSON resume files
-- **Text-to-JSON Conversion**: AI-powered conversion from any text resume (supports OpenAI API or Local LLM)
-- Real-time structure validation
-- Sample template download
-- Detailed error feedback
-
-### 🔍 **Job Description Analysis**
-- Smart keyword extraction
-- Real-time validation (word count, sections)
-- Content analysis for optimization tips
-
-### 📊 **ATS Optimization**
-- Achievement reordering by relevance
-- Keyword integration and scoring
-- Before/after ATS score comparison
-- Detailed optimization summary
-
-### 📄 **Export Options**
-- PDF export (requires wkhtmltopdf)
-- HTML download
-- Print functionality
-- Optimized formatting
-
-### 🎨 **User Experience**
-- **Professional Landing Page**: Compelling value proposition with testimonials and feature showcase
-- **Browser Data Persistence**: Auto-save functionality with intelligent storage management
-- **Loading states with progress indicators**: Real-time feedback during optimization
-- **Responsive design (mobile/tablet/desktop)**: Seamless experience across all devices
-- **Real-time validation feedback**: Instant input validation and error handling
-- **Professional Bootstrap styling**: Modern design with custom animations
-
-## 🔧 API Endpoints
+## API Endpoints
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/optimize` | POST | Main resume optimization |
-| `/api/export-pdf` | POST | Generate PDF export |
+| `/api/health` | GET | Health check & configuration status |
+| `/api/optimize` | POST | Optimize resume for job description |
+| `/api/parse-resume` | POST | AI text-to-JSON conversion |
 | `/api/validate-resume` | POST | Validate resume structure |
 | `/api/sample-resume` | GET | Download sample template |
-| `/api/parse-resume` | POST | AI-powered text-to-JSON conversion (OpenAI/Local) |
-| `/api/health` | GET | Health check |
+| `/api/export-pdf` | POST | Generate PDF export |
 
-## 🧪 Manual Testing
+## Command-Line Usage
 
-If you need to test individual components:
+For quick resume generation without the web interface:
 
 ```bash
-# Test resume generation
-python3 -c "
-from resume_generator import ResumeGenerator
-import json
-with open('david_resume_json.json') as f:
-    data = json.load(f)
-generator = ResumeGenerator(data)
-html = generator.generate_ats_template()
-print(f'Generated {len(html)} characters of HTML')
-"
+# Generate default resume
+python3 resume_generator.py
+
+# Generate job-specific resume
+python3 resume_generator.py david_resume_json.json ats job_description.txt
 ```
 
-## 📋 Usage Workflow
+## Testing
 
-1. **Landing Page**: Start with compelling introduction and email capture for personalized experience
-2. **Resume Input**: Choose between JSON upload or AI-powered text-to-JSON conversion
-3. **Job Description**: Paste target job posting with auto-save and recent jobs access
-4. **Optimization**: Click "Optimize My Resume" with real-time progress indicators
-5. **Review Results**: Compare default vs optimized versions with detailed ATS scoring
-6. **Export & Save**: Download as PDF/HTML with automatic result caching
+```bash
+# Validate environment setup
+./setup_dev.sh
 
-## 🎯 Resume JSON Format
+# Test AI providers
+python3 test_ai_providers.py
 
-Your resume should be structured as JSON with these sections:
+# Basic integration test
+python3 basic_integration_test.py
+
+# Full integration test (requires OpenAI API)
+python3 integration_test.py
+```
+
+## Resume JSON Format
+
+Your resume should be structured with these sections:
 - `personal`: Contact information
 - `summary`: Professional summary with headline and bullets
-- `experience`: Work history with achievements
-- `skills`: Technical skills by category
+- `experience`: Work history with achievements and keywords
+- `skills`: Technical skills by category and proficiency
 - `education`: Educational background
 - `projects`: Key projects (optional)
 
-Use the "Download Sample Template" button for a complete example.
+Use the **"Download Sample Template"** button in the app for a complete example.
 
-## 🔄 Development
+## Performance Metrics
 
-The application uses:
-- **Backend**: Flask with CORS support and configurable AI integration
-- **Frontend**: React with Bootstrap 5 and advanced component architecture
-- **AI Integration**: Configurable OpenAI API or Local LLM for intelligent text-to-JSON conversion
-- **Data Persistence**: Comprehensive browser storage with auto-save and expiration
-- **Styling**: Custom CSS with Inter font and professional animations
-- **PDF Generation**: wkhtmltopdf + pdfkit for high-quality exports
-- **Validation**: Multi-layer client and server-side validation with real-time feedback
+- **Keyword Processing**: 50+ keywords per job description
+- **ATS Score Improvement**: Typical 10-15% (up to 30% in optimized cases)
+- **Response Time**: <3 seconds for optimization
+- **AI Conversion**: <30 seconds for text-to-JSON
 
-## 📈 Performance
+## Technology Stack
 
-- **Keyword Processing**: Extracts and matches 50+ keywords per job description
-- **ATS Score Improvement**: Typical improvement of 10-15% (up to 30% in optimized cases)
-- **Response Time**: <3 seconds for optimization, <30 seconds for text-to-JSON conversion
-- **File Support**: Handles resumes up to 5MB with intelligent compression
-- **Storage Efficiency**: Smart browser storage with automatic cleanup and 5MB quota management
-- **Real-time Updates**: Auto-save every 2 seconds with debounced input handling
+- **Backend**: Flask, Python 3.8+
+- **Frontend**: React 18, Bootstrap 5
+- **AI Integration**: OpenAI API or Local LLM
+- **PDF Generation**: wkhtmltopdf + pdfkit
+- **Data Persistence**: Browser localStorage with auto-save
 
-## 🧪 Testing
+## Troubleshooting
 
-### Automated Testing
-
-Run comprehensive tests to validate system functionality:
-
+### Backend won't start
 ```bash
-# Basic integration test (no dependencies required)
-python3 basic_integration_test.py
+# Check Python version
+python3 --version
 
-# Full integration test (requires OpenAI API key)
-python3 integration_test.py
+# Reinstall dependencies
+./install_dependencies.sh
 
-# AI provider configuration tests
-python3 test_ai_providers.py
-
-# Mock API tests (standalone)
-python3 test_mock_api.py
-
-# Interactive AI provider demonstration
-python3 demo_ai_switching.py
+# Check if port 5000 is in use
+lsof -i :5000
 ```
 
-### Manual Testing Checklist
-
-- [ ] Backend health check: `curl http://localhost:5000/api/health`
-- [ ] Resume generation: `python3 resume_generator.py`
-- [ ] Job customization with sample job description
-- [ ] Frontend loads at `http://localhost:3000`
-- [ ] All setup scripts execute without errors
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**Backend won't start:**
-- Check if Python 3 is installed: `python3 --version`
-- Missing dependencies? Run `./install_dependencies.sh`
-- Port 5000 in use? Kill process: `pkill -f "python"`
-
-**Frontend won't start:**
-- Check Node.js: `node --version`
-- Clear npm cache: `rm -rf node_modules package-lock.json && npm install`
-- Port 3000 in use? Kill process: `pkill -f "node"`
-
-**Resume generation fails:**
-- Verify `david_resume_json.json` exists and is valid JSON
-- Check file permissions: `ls -la *.py *.sh`
-- Test basic functionality: `python3 basic_integration_test.py`
-
-### Fallback Options
-
-The system is designed to work even with minimal dependencies:
-- **No Flask dependencies**: Uses simple HTTP server
-- **No npm/React**: Use command-line resume generation
-- **No OpenAI API**: Core optimization still works without AI features
-
-## 🚀 Ubuntu Server Deployment
-
-**Ready for production deployment!** See [`DEPLOYMENT.md`](DEPLOYMENT.md) for complete Ubuntu server setup.
-
-### Quick Deploy
+### Frontend won't start
 ```bash
-git clone <your-repo> /home/ubuntu/ResumeForge
-cd /home/ubuntu/ResumeForge
+# Check Node.js version
+node --version
+
+# Clear and reinstall
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Resume generation fails
+```bash
+# Validate environment
+./setup_dev.sh
+
+# Test core functionality
+python3 basic_integration_test.py
+```
+
+### AI conversion not working
+```bash
+# Check .env configuration
+cat .env
+
+# Verify OpenAI API key
+python3 test_ai_providers.py
+
+# Check API health
+curl http://localhost:5000/api/health
+```
+
+## Production Deployment
+
+Ready for Ubuntu server deployment with systemd services, Nginx, and SSL.
+
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for complete production setup instructions.
+
+```bash
+# Quick deploy to Ubuntu server
 ./deploy.sh
 ```
 
-Includes systemd services, Nginx configuration, SSL setup, and production optimizations.
+## Development
 
-## 🗃️ Archive
+### Start Development Environment
+```bash
+# Validate setup
+./setup_dev.sh
 
-Historical documentation files moved to:
+# Start with hot-reload
+./start_backend.sh  # Terminal 1
+./start_frontend.sh # Terminal 2
 ```
-Archived/
-├── FEATURE_SUMMARY.md
-├── LANDING_PAGE_IMPLEMENTATION.md  
-└── LM_STUDIO_SETUP.md
-```
+
+### Tech Stack Details
+- **Architecture**: Full-stack web app with REST API
+- **Frontend**: React with React Router, Axios for API calls
+- **Backend**: Flask with CORS support, modular service architecture
+- **AI**: Configurable provider system (OpenAI/Local)
+- **Styling**: Bootstrap 5 + custom CSS with Inter font
+- **Validation**: Multi-layer client and server-side validation
+
+## Contributing
+
+This is a personal project, but feedback and suggestions are welcome via GitHub issues.
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Author
+
+David Veksler - [GitHub](https://github.com/DavidVeksler)
