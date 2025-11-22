@@ -1,207 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import LandingPage from './components/LandingPage';
-import InputSection from './components/InputSection';
-import ResultsSection from './components/ResultsSection';
-import AdminPage from './components/AdminPage';
-import { optimizeResume } from './services/api';
-import AppStorage from './utils/storage';
-import './components/LandingPage.css';
+import React from 'react';
+import LandingPage from './pages/LandingPage';
+import InputSection from './pages/InputSection';
+import ResultsSection from './pages/ResultsSection';
+import AdminPage from './pages/AdminPage';
+import { useAppState, useResumeOptimization } from './hooks';
+import './pages/LandingPage.css';
 
 function App() {
-  // Check URL path for routing
-  const getInitialStep = () => {
-    const path = window.location.pathname;
-    if (path === '/admin' || path === '/admin/') {
-      return 'admin';
-    }
-    return 'landing';
-  };
-  
-  const [currentStep, setCurrentStep] = useState(getInitialStep()); // 'landing', 'input', 'results', or 'admin'
-  const [optimizationData, setOptimizationData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [loadingStep, setLoadingStep] = useState('');
-  const [autoSaveInterval, setAutoSaveInterval] = useState(null);
+  // Use custom hooks for state management
+  const appState = useAppState();
+  const optimization = useResumeOptimization();
 
-  // Load persisted data on app start
-  useEffect(() => {
-    loadPersistedData();
-    setupAutoSave();
-    
-    // Handle browser back/forward buttons
-    const handlePopState = () => {
-      setCurrentStep(getInitialStep());
-    };
-    
-    window.addEventListener('popstate', handlePopState);
-    
-    // Cleanup on unmount
-    return () => {
-      if (autoSaveInterval) {
-        AppStorage.disableAutoSave(autoSaveInterval);
-      }
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, []);
-
-  // Auto-save current state periodically
-  useEffect(() => {
-    if (currentStep !== 'landing') {
-      saveAppState();
-    }
-  }, [currentStep, optimizationData]);
-
-  const loadPersistedData = () => {
-    try {
-      // Load previous app state
-      const savedState = AppStorage.getAppState();
-      if (savedState && savedState.currentStep && savedState.currentStep !== 'landing') {
-        // Only restore to input or results if user was actively using the app
-        const timeSinceLastUse = Date.now() - (savedState.lastUsed || 0);
-        const maxRestoreTime = 24 * 60 * 60 * 1000; // 24 hours
-        
-        if (timeSinceLastUse < maxRestoreTime) {
-          setCurrentStep(savedState.currentStep);
-          
-          // Load optimization results if available
-          const savedResults = AppStorage.getOptimizationResults();
-          if (savedResults && savedState.currentStep === 'results') {
-            setOptimizationData(savedResults);
-          }
-        }
-      }
-
-      // Clean up expired data
-      AppStorage.cleanupExpiredData();
-      
-      console.log('✅ Persisted data loaded successfully');
-    } catch (error) {
-      console.error('Error loading persisted data:', error);
-    }
-  };
-
-  const saveAppState = () => {
-    try {
-      AppStorage.saveAppState({
-        currentStep,
-        hasOptimizationData: !!optimizationData
-      });
-    } catch (error) {
-      console.error('Error saving app state:', error);
-    }
-  };
-
-  const setupAutoSave = () => {
-    const userPreferences = AppStorage.getUserPreferences();
-    if (userPreferences.autoSave) {
-      const interval = AppStorage.enableAutoSave(() => {
-        if (currentStep !== 'landing') {
-          saveAppState();
-        }
-      }, 30000); // Auto-save every 30 seconds
-      
-      setAutoSaveInterval(interval);
-    }
-  };
-
-  const handleOptimize = async (resumeData, jobDescription) => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      // Save input data for persistence
-      AppStorage.saveResumeData(resumeData);
-      AppStorage.saveJobDescription(jobDescription);
-      AppStorage.addRecentJob(jobDescription);
-      
-      setLoadingStep('Analyzing job description...');
-      await new Promise(resolve => setTimeout(resolve, 800)); // Brief pause for UX
-      
-      setLoadingStep('Extracting keywords...');
-      await new Promise(resolve => setTimeout(resolve, 600));
-      
-      setLoadingStep('Optimizing resume content...');
-      const result = await optimizeResume(resumeData, jobDescription);
-      
-      setLoadingStep('Calculating ATS scores...');
-      await new Promise(resolve => setTimeout(resolve, 400));
-      
-      // Save optimization results
-      AppStorage.saveOptimizationResults(result);
-      
-      setOptimizationData(result);
-      setCurrentStep('results');
-    } catch (err) {
-      setError(err.message || 'An error occurred while optimizing your resume');
-    } finally {
-      setIsLoading(false);
-      setLoadingStep('');
-    }
-  };
-
+  // Event handlers
   const handleGetStarted = () => {
-    setCurrentStep('input');
-    setError(null);
-    window.history.pushState({}, '', '/');
+    appState.goToInput();
+    optimization.clearError();
   };
 
   const handleBackToLanding = () => {
-    setCurrentStep('landing');
-    setOptimizationData(null);
-    setError(null);
-    setLoadingStep('');
-    window.history.pushState({}, '', '/');
+    appState.goToLanding();
+    optimization.clear();
   };
 
   const handleBackToInput = () => {
-    setCurrentStep('input');
-    setOptimizationData(null);
-    setError(null);
-    setLoadingStep('');
-    window.history.pushState({}, '', '/');
+    appState.goToInput();
+    optimization.clear();
+  };
+
+  const handleOptimize = async (resumeData, jobDescription) => {
+    try {
+      await optimization.optimize(resumeData, jobDescription);
+      appState.goToResults();
+    } catch (err) {
+      // Error is handled by the hook
+      console.error('Optimization failed:', err);
+    }
   };
 
   return (
     <div className="main-container">
-      {error && (
+      {optimization.error && (
         <div className="alert alert-danger alert-dismissible fade show mb-4" role="alert">
           <i className="bi bi-exclamation-triangle-fill me-2"></i>
-          {error}
-          <button type="button" className="btn-close" onClick={() => setError(null)}></button>
+          {optimization.error}
+          <button type="button" className="btn-close" onClick={optimization.clearError}></button>
         </div>
       )}
-      
-      {isLoading && (
+
+      {optimization.isLoading && (
         <div className="loading-overlay">
           <div className="loading-content">
             <div className="spinner-border text-primary mb-3" role="status">
               <span className="visually-hidden">Loading...</span>
             </div>
             <h5 className="mb-2">Optimizing Your Resume</h5>
-            <p className="text-muted mb-0">{loadingStep}</p>
+            <p className="text-muted mb-0">{optimization.loadingStep}</p>
             <div className="progress mt-3" style={{width: '300px'}}>
-              <div className="progress-bar progress-bar-striped progress-bar-animated" 
-                   role="progressbar" 
+              <div className="progress-bar progress-bar-striped progress-bar-animated"
+                   role="progressbar"
                    style={{width: '100%'}}></div>
             </div>
           </div>
         </div>
       )}
-      
-      {currentStep === 'landing' ? (
+
+      {appState.currentStep === 'landing' ? (
         <LandingPage onGetStarted={handleGetStarted} />
-      ) : currentStep === 'input' ? (
-        <InputSection 
-          onOptimize={handleOptimize} 
-          isLoading={isLoading}
+      ) : appState.currentStep === 'input' ? (
+        <InputSection
+          onOptimize={handleOptimize}
+          isLoading={optimization.isLoading}
           onBackToLanding={handleBackToLanding}
         />
-      ) : currentStep === 'admin' ? (
+      ) : appState.currentStep === 'admin' ? (
         <AdminPage onBackToLanding={handleBackToLanding} />
       ) : (
-        <ResultsSection 
-          data={optimizationData}
+        <ResultsSection
+          data={optimization.optimizationData}
           onBackToInput={handleBackToInput}
         />
       )}
