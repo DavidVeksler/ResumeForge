@@ -84,8 +84,8 @@ echo -e "${GREEN}All prerequisites met!${NC}"
 echo ""
 
 # Start backend in background
-echo -e "${BLUE}🔧 Starting backend server...${NC}"
-python3 run_app.py > /tmp/resumeforge-backend.log 2>&1 &
+echo -e "${BLUE}🔧 Starting backend server (v2.0 - consolidated architecture)...${NC}"
+python3 -m backend.main > /tmp/resumeforge-backend.log 2>&1 &
 BACKEND_PID=$!
 
 # Wait for backend to start

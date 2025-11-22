@@ -8,11 +8,12 @@ ResumeForge is a **data-driven resume generator** that treats career information
 
 ### Technology Stack
 
-**Backend:**
+**Backend (v2.0 - Consolidated Architecture):**
 - Flask 3.0 REST API with CORS support
-- Modular service architecture (`services/`, `routes/`, `config/`)
-- Configurable AI provider system (OpenAI API or Local LLM)
-- Python 3.8+ with type hints where applicable
+- **Single package structure** (`backend/`) with modular subpackages
+- Centralized configuration with type hints throughout
+- Provider abstraction layer for AI services (OpenAI API or Local LLM)
+- Python 3.8+ with comprehensive type annotations
 
 **Frontend:**
 - React 18 with functional components and hooks
@@ -27,32 +28,40 @@ ResumeForge is a **data-driven resume generator** that treats career information
 
 ### Core Components
 
-#### Backend Services
+#### Backend Services (v2.0)
 
-**`app.py`** - Main Flask application
-- Route registration and CORS configuration
-- AI provider selection logic
-- Error handling middleware
+**`backend/main.py`** - Single Entry Point
+- Consolidated from `app.py`, `run_app.py`, `simple_server.py`
+- Command-line argument parsing
+- Startup configuration and health display
 
-**`services/ai_service.py`** - AI Provider Management
-- Dynamic client initialization (OpenAI or Local)
-- Text-to-JSON conversion with structured prompts
-- Error handling for API failures
+**`backend/api/routes.py`** - REST API Endpoints
+- All consolidated API routes
+- Request/response handling
+- CORS configuration
 
-**`services/resume_service.py`** - Resume Processing
-- Resume validation and optimization
-- Keyword matching and relevance scoring
-- Achievement reordering algorithm
+**`backend/services/`** - Business Logic Layer
+- `resume.py` - Resume generation and optimization
+- `scoring.py` - ATS scoring algorithms
+- `parsing.py` - Text-to-JSON conversion
+- `validation.py` - Input validation
 
-**`services/scoring_service.py`** - ATS Scoring
-- Keyword extraction from job descriptions
-- Relevance score calculation
-- Before/after comparison metrics
+**`backend/providers/`** - AI Provider Abstraction
+- `base.py` - Provider interface (abstract base class)
+- `openai_provider.py` - OpenAI implementation
+- `local_provider.py` - Local LLM implementation
+- `factory.py` - Provider factory pattern
 
-**`resume/generator.py`** - HTML Template Generation
-- ATS-optimized HTML rendering
-- Hidden keyword injection for ATS systems
-- Responsive Bootstrap CSS generation
+**`backend/models/`** - Data Models with Type Hints
+- `resume.py` - Resume data structures
+- `requests.py` - API request schemas
+- `responses.py` - API response schemas
+- `validation.py` - Validation result models
+
+**`backend/config/settings.py`** - Centralized Configuration
+- Environment variable management
+- Application settings
+- Feature flags
 
 #### Frontend Components
 
@@ -214,22 +223,31 @@ LOCAL_LLM_BASE_URL=http://172.28.144.1:1234/v1
 LOCAL_MODEL_NAME=local-model
 ```
 
-### Provider Switching Logic
+### Provider Switching Logic (v2.0)
 
-Located in `app.py`:
+Located in `backend/providers/factory.py`:
 
 ```python
-@app.route('/api/parse-resume', methods=['POST'])
-def parse_text_resume():
-    ai_provider = os.getenv('AI_PROVIDER', 'openai')
+from backend.providers import create_ai_provider
 
-    if ai_provider == 'openai':
-        client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-    elif ai_provider == 'local':
-        client = OpenAI(
-            base_url=os.getenv('LOCAL_LLM_BASE_URL'),
-            api_key='not-needed'
-        )
+# Automatically uses configured provider from settings
+provider = create_ai_provider()  # Uses AI_PROVIDER env var
+
+# Or explicitly specify
+openai_provider = create_ai_provider('openai')
+local_provider = create_ai_provider('local')
+```
+
+**Provider Interface:**
+All providers implement the `AIProvider` abstract base class, ensuring consistent API:
+
+```python
+class AIProvider(ABC):
+    @abstractmethod
+    def parse_resume_text(text: str) -> Dict[str, Any]: ...
+
+    @abstractmethod
+    def test_connectivity() -> Dict[str, Any]: ...
 ```
 
 **Frontend Compatibility:**
@@ -253,46 +271,62 @@ Format metrics numerically where possible."""
 
 ## Development Commands
 
-### Common Workflows
+### Common Workflows (v2.0)
 
 ```bash
 # Full application start
 ./start.sh                          # Single command (combined)
-./start_backend.sh                  # Backend only (dev mode)
+./start_backend.sh                  # Backend only (dev mode, uses backend/main.py)
 ./start_frontend.sh                 # Frontend only (hot-reload)
+
+# Direct backend execution (NEW in v2.0)
+python3 -m backend.main             # Default settings
+python3 -m backend.main --port 8000 # Custom port
+python3 -m backend.main --debug     # Enable debug mode
 
 # Environment setup
 ./setup_dev.sh                      # Validate environment
 ./install_dependencies.sh           # Install all dependencies
 ./install_pdf_support.sh            # PDF export support (wkhtmltopdf)
 
-# Testing
+# Testing (NEW consolidated test suite)
+pytest backend/tests/               # Run all tests
+pytest backend/tests/test_api.py    # API tests only
+pytest backend/tests/test_services.py  # Service layer tests
+pytest backend/tests/test_providers.py # Provider tests
+
+# Legacy tests (still available for compatibility)
 python3 test_ai_providers.py        # Test both AI providers
-python3 demo_ai_switching.py        # Interactive provider demo
 python3 basic_integration_test.py   # Core functionality test
-python3 integration_test.py         # Full integration test (requires API key)
 
 # Command-line resume generation
 python3 resume_generator.py         # Default resume
 python3 resume_generator.py david_resume_json.json ats job_description.txt
 ```
 
-### Testing Framework
+### Testing Framework (v2.0)
 
-**Mock API Testing** (`test_mock_api.py`):
-- Standalone tests without dependencies
-- Mock resume generation and optimization
-- Validates core algorithm logic
+**NEW: Consolidated Test Suite** (`backend/tests/`):
+- `test_api.py` - API endpoint tests with Flask test client
+- `test_services.py` - Business logic and service layer tests
+- `test_providers.py` - AI provider implementation tests
+- `conftest.py` - Shared pytest fixtures and configuration
 
-**AI Provider Tests** (`test_ai_providers.py`):
-- Tests both OpenAI and Local LLM providers
-- Validates text-to-JSON conversion
-- Checks error handling
+**Test Execution:**
+```bash
+# All tests
+pytest backend/tests/
 
-**Integration Tests** (`integration_test.py`):
-- End-to-end workflow testing
-- Requires OpenAI API key
-- Tests all API endpoints
+# With coverage
+pytest backend/tests/ --cov=backend --cov-report=html
+
+# Specific test file
+pytest backend/tests/test_api.py -v
+```
+
+**Legacy Tests** (still available):
+- `test_ai_providers.py` - Standalone AI provider tests
+- `basic_integration_test.py` - Core functionality validation
 
 ## API Endpoints Reference
 
@@ -331,31 +365,63 @@ python3 resume_generator.py david_resume_json.json ats job_description.txt
 
 ## File Organization
 
-### Backend Structure
+### Backend Structure (v2.0 - Consolidated)
 ```
 ResumeForge/
-├── app.py                      # Main Flask application
-├── run_app.py                  # Application runner
-├── resume_generator.py         # Legacy CLI generator
-│
-├── services/
+├── backend/                    # NEW: Single consolidated package
 │   ├── __init__.py
-│   ├── ai_service.py          # AI provider management
-│   ├── resume_service.py      # Resume processing
-│   └── scoring_service.py     # ATS scoring
+│   ├── main.py                # Single entry point (replaces app.py, run_app.py, simple_server.py)
+│   │
+│   ├── api/                   # API layer
+│   │   ├── __init__.py
+│   │   ├── routes.py         # All REST API endpoints
+│   │   └── health.py         # Health check utilities
+│   │
+│   ├── services/              # Business logic layer
+│   │   ├── __init__.py
+│   │   ├── resume.py         # Resume generation and optimization
+│   │   ├── scoring.py        # ATS scoring algorithms
+│   │   ├── parsing.py        # Text-to-JSON conversion
+│   │   └── validation.py     # Input validation
+│   │
+│   ├── providers/             # AI provider abstraction
+│   │   ├── __init__.py
+│   │   ├── base.py           # Abstract provider interface
+│   │   ├── openai_provider.py # OpenAI implementation
+│   │   ├── local_provider.py  # Local LLM implementation
+│   │   └── factory.py        # Provider factory
+│   │
+│   ├── models/                # Data models with type hints
+│   │   ├── __init__.py
+│   │   ├── resume.py         # Resume data structures
+│   │   ├── requests.py       # API request schemas
+│   │   ├── responses.py      # API response schemas
+│   │   └── validation.py     # Validation models
+│   │
+│   ├── config/                # Centralized configuration
+│   │   ├── __init__.py
+│   │   └── settings.py       # Application settings (from env vars)
+│   │
+│   └── tests/                 # Consolidated test suite
+│       ├── __init__.py
+│       ├── conftest.py       # Pytest configuration
+│       ├── test_api.py       # API endpoint tests
+│       ├── test_services.py  # Service layer tests
+│       └── test_providers.py # Provider tests
 │
-├── resume/
-│   ├── generator.py           # HTML template generation
-│   ├── keyword_extractor.py   # Job description analysis
-│   └── relevance_scorer.py    # Achievement scoring
+├── resume/                    # Legacy resume generation (still used)
+│   ├── generator.py          # HTML template generation
+│   ├── keyword_extractor.py  # Job description analysis
+│   └── relevance_scorer.py   # Achievement scoring
 │
-├── routes/
-│   ├── __init__.py
-│   └── health_routes.py       # Health check endpoints
+├── config/                    # Legacy config (still used)
+│   └── patterns.py           # Regex patterns for keywords
 │
-└── config/
-    ├── __init__.py
-    └── patterns.py            # Regex patterns for keywords
+├── resume_generator.py        # CLI tool (still available)
+└── [Legacy files - kept for compatibility]
+    ├── app.py                # OLD: Replaced by backend/main.py
+    ├── run_app.py            # OLD: Replaced by backend/main.py
+    └── simple_server.py      # OLD: Replaced by backend/main.py
 ```
 
 ### Frontend Structure
@@ -417,14 +483,21 @@ Quick deploy:
 
 ## Development Best Practices
 
-### Adding New Features
+### Adding New Features (v2.0)
 
-1. **Backend**: Add service in `services/` directory
-2. **Routes**: Register in `app.py` with appropriate CORS headers
-3. **Frontend**: Create component in `src/components/`
-4. **API**: Update `src/services/api.js` with new endpoint
-5. **Testing**: Add tests to appropriate test file
-6. **Documentation**: Update this file and README.md
+1. **Backend Service**: Add logic in `backend/services/` directory
+2. **API Route**: Add endpoint in `backend/api/routes.py`
+3. **Data Models**: Define schemas in `backend/models/` with type hints
+4. **Frontend**: Create component in `src/components/`
+5. **API Client**: Update `src/services/api.js` with new endpoint
+6. **Testing**: Add tests in `backend/tests/` using pytest
+7. **Documentation**: Update CLAUDE.md, README.md, and backend/README.md
+
+**Example: Adding a New AI Provider**
+1. Create `backend/providers/your_provider.py` implementing `AIProvider`
+2. Update `backend/providers/factory.py` to recognize new provider
+3. Add tests in `backend/tests/test_providers.py`
+4. Update `.env.example` with new provider configuration
 
 ### Code Style
 
