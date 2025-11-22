@@ -85,22 +85,13 @@ echo ""
 echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
 echo ""
 
-# Try Flask first, fallback to simple server
+# Start the consolidated backend server
 if python3 -c "import flask, flask_cors, dotenv" 2>/dev/null; then
-    echo -e "${GREEN}Starting Flask server with full features...${NC}"
+    echo -e "${GREEN}Starting ResumeForge Backend v2.0 (consolidated architecture)...${NC}"
     echo ""
-    python3 run_app.py
+    python3 -m backend.main
 else
-    echo -e "${YELLOW}⚠️  Flask dependencies not available${NC}"
-    echo -e "${YELLOW}Starting fallback simple server (limited functionality)${NC}"
-    echo "For full features, run: ./install_dependencies.sh"
-    echo ""
-
-    if [ -f "simple_server.py" ]; then
-        python3 simple_server.py
-    else
-        echo -e "${RED}❌ simple_server.py not found${NC}"
-        echo "Please install dependencies: ./install_dependencies.sh"
-        exit 1
-    fi
+    echo -e "${RED}❌ Flask dependencies not available${NC}"
+    echo "Please install dependencies: pip3 install -r requirements.txt --user"
+    exit 1
 fi
