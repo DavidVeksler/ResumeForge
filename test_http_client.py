@@ -5,6 +5,12 @@ Simple HTTP test for LM Studio endpoint using requests
 
 import requests
 import json
+import sys
+import io
+
+# Fix Windows console encoding for emojis
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def test_lm_studio_direct():
     """Test LM Studio endpoint directly with HTTP requests"""

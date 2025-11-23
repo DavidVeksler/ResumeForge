@@ -14,6 +14,11 @@ import os
 import tempfile
 from unittest.mock import Mock, patch, MagicMock
 import sys
+import io
+
+# Fix Windows console encoding for emojis
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 # Try to import pytest, but continue without it if not available
 try:

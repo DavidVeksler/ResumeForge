@@ -7,7 +7,13 @@ Tests the configuration switching mechanism for text-to-JSON conversion
 import os
 import json
 import tempfile
+import sys
+import io
 from openai import OpenAI
+
+# Fix Windows console encoding for emojis
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def test_openai_provider():
     """Test OpenAI API provider"""

@@ -8,13 +8,23 @@ import time
 import requests
 from pathlib import Path
 import os
+import sys
+import io
+
+# Fix Windows console encoding for emojis
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+def get_python_cmd():
+    """Get the correct Python command for the current platform"""
+    return 'python' if sys.platform == 'win32' else 'python3'
 
 def test_core_functionality():
     """Test core resume generation without external dependencies"""
     print("🧪 Testing core resume generation...")
     
     # Test basic resume generation
-    result = subprocess.run(['python3', 'resume_generator.py'], 
+    result = subprocess.run([get_python_cmd(), 'resume_generator.py'],
                           capture_output=True, text=True)
     
     if result.returncode != 0:
@@ -73,7 +83,7 @@ def test_job_customization():
         f.write(test_job)
     
     # Test customized resume generation
-    result = subprocess.run(['python3', 'resume_generator.py', 'david_resume_json.json', 'ats', 'test_job.txt'], 
+    result = subprocess.run([get_python_cmd(), 'resume_generator.py', 'david_resume_json.json', 'ats', 'test_job.txt'], 
                           capture_output=True, text=True)
     
     # Clean up
