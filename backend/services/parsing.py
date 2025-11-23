@@ -3,7 +3,7 @@ Parsing Service - Text-to-JSON conversion using AI providers
 Consolidates AI parsing logic
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from ..providers import create_ai_provider, AIProviderError
 
@@ -12,7 +12,7 @@ class ParsingService:
     """Service for text resume parsing"""
 
     @staticmethod
-    def parse_text_resume(text_resume: str, provider_type: str = None) -> Dict[str, Any]:
+    def parse_text_resume(text_resume: str, provider_type: Optional[str] = None) -> Dict[str, Any]:
         """
         Convert text resume to structured JSON using AI
 
@@ -39,7 +39,7 @@ class ParsingService:
         return parsed_data
 
     @staticmethod
-    def test_ai_provider(provider_type: str = None) -> Dict[str, Any]:
+    def test_ai_provider(provider_type: Optional[str] = None) -> Dict[str, Any]:
         """
         Test AI provider connectivity
 

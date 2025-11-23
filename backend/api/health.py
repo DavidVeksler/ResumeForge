@@ -7,6 +7,7 @@ import sys
 from datetime import datetime
 from typing import Dict, Any
 
+from .. import __version__
 from ..config import settings
 
 
@@ -23,6 +24,7 @@ def get_health_status() -> Dict[str, Any]:
         import flask
         flask_version = flask.__version__
     except ImportError:
+        # Flask not installed - version will remain None
         pass
 
     # Get OpenAI package availability
@@ -31,11 +33,12 @@ def get_health_status() -> Dict[str, Any]:
         import openai
         openai_available = True
     except ImportError:
+        # OpenAI package not installed - AI features will be unavailable
         pass
 
     return {
         "status": "healthy",
-        "version": "2.0.0",
+        "version": __version__,
         "timestamp": datetime.utcnow().isoformat(),
         "python_version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
         "flask_version": flask_version,
