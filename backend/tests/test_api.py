@@ -5,7 +5,6 @@ Consolidated from integration_test.py and test_mock_api.py
 
 import json
 import pytest
-from pathlib import Path
 
 from backend.api import create_app
 from backend.config import settings

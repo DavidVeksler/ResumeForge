@@ -4,7 +4,6 @@ Service layer tests
 
 import pytest
 import json
-from pathlib import Path
 
 from backend.services import (
     ResumeService,

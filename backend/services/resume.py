@@ -1,6 +1,11 @@
 """
 Resume Service - Handles resume generation and optimization
 Consolidates logic from services/resume_service.py and resume/generator.py
+
+NOTE: Currently depends on legacy resume.generator module for HTML generation.
+This is a deliberate design decision to reuse the existing, well-tested HTML
+template generation logic. Future enhancement: move resume.generator into
+backend/templates/ to achieve complete architectural independence.
 """
 
 from typing import Dict, Any, Tuple, List

@@ -3,10 +3,10 @@ Scoring Service - ATS scoring and optimization metrics
 Consolidates logic from services/scoring_service.py
 """
 
-from typing import Dict, Any, List, Set
+from typing import Dict, Any, List
 import re
 
-from config.patterns import PRIORITY_PATTERNS
+from ..config.patterns import PRIORITY_PATTERNS
 
 
 class ScoringService:

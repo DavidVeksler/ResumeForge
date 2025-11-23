@@ -4,12 +4,13 @@ Merges all endpoints from app.py, run_app.py, and simple_server.py
 """
 
 import json
+import os
 import tempfile
 from datetime import datetime
 from typing import Optional
 
 try:
-    from flask import Flask, request, jsonify, send_file
+    from flask import Flask, request, jsonify, send_file, after_this_request
     from flask_cors import CORS
     FLASK_AVAILABLE = True
 except ImportError:
@@ -23,6 +24,7 @@ try:
 except ImportError:
     PDFKIT_AVAILABLE = False
 
+from .. import __version__
 from ..services import (
     ResumeService,
     ScoringService,
@@ -269,6 +271,16 @@ def create_app() -> Optional[Flask]:
             # Generate PDF
             pdfkit.from_string(html_content, pdf_path, options=options)
 
+            # Clean up temporary file after response is sent
+            @after_this_request
+            def cleanup(response):
+                try:
+                    os.unlink(pdf_path)
+                except Exception:
+                    # File cleanup is best-effort; log but don't fail the request
+                    pass
+                return response
+
             return send_file(
                 pdf_path,
                 as_attachment=True,
@@ -294,7 +306,7 @@ def create_app() -> Optional[Flask]:
         return jsonify(
             {
                 "name": "ResumeForge API",
-                "version": "2.0.0",
+                "version": __version__,
                 "status": "running",
                 "endpoints": {
                     "health": "/api/health",
