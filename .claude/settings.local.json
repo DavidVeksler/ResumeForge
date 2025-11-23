@@ -13,7 +13,17 @@
       "Bash(touch:*)",
       "Bash(pip3 show:*)",
       "Bash(pip3 install:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(python test_mock_api.py:*)",
+      "Bash(python basic_integration_test.py:*)",
+      "Bash(python test_ai_providers.py:*)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(timeout /t 5 /nobreak)",
+      "Bash(nul)",
+      "Bash(timeout /t 3 /nobreak)",
+      "Bash(timeout /t 2 /nobreak)",
+      "Bash(if not exist .env copy .env.example .env)"
     ],
     "deny": []
   }

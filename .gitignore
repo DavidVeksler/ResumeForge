@@ -357,3 +357,4 @@ __marimo__/
 resume_ats_*.html
 resume_*.html
 nul
+.claude/settings.local.json
