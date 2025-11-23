@@ -24,7 +24,7 @@ def get_health_status() -> Dict[str, Any]:
         import flask
         flask_version = flask.__version__
     except ImportError:
-        # Flask not installed - version will remain None
+        # Flask is optional for health checks - gracefully degrade if not installed
         pass
 
     # Get OpenAI package availability
@@ -33,7 +33,7 @@ def get_health_status() -> Dict[str, Any]:
         import openai
         openai_available = True
     except ImportError:
-        # OpenAI package not installed - AI features will be unavailable
+        # OpenAI is optional - local LLM provider may be used instead
         pass
 
     return {

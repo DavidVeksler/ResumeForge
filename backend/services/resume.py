@@ -9,7 +9,12 @@ backend/templates/ to achieve complete architectural independence.
 """
 
 from typing import Dict, Any, Tuple, List
-from resume.generator import ResumeGenerator, extract_keywords_from_job_description
+
+# TODO: Fully consolidate resume generation into backend module
+# For now, we depend on legacy resume.generator for HTML template generation
+# while using backend services for keyword extraction
+from resume.generator import ResumeGenerator
+from .scoring import ScoringService
 
 
 class ResumeService:
@@ -33,7 +38,7 @@ class ResumeService:
         generator = ResumeGenerator(resume_data)
 
         # Extract keywords from job description
-        role_keywords = extract_keywords_from_job_description(job_description)
+        role_keywords = ScoringService.extract_keywords_from_job_description(job_description)
 
         # Generate default resume
         default_html = generator.generate_ats_template()

@@ -9,6 +9,8 @@ import tempfile
 from datetime import datetime
 from typing import Optional
 
+from .. import __version__
+
 try:
     from flask import Flask, request, jsonify, send_file, after_this_request
     from flask_cors import CORS
@@ -271,14 +273,14 @@ def create_app() -> Optional[Flask]:
             # Generate PDF
             pdfkit.from_string(html_content, pdf_path, options=options)
 
-            # Clean up temporary file after response is sent
+            # Clean up temp file after response is sent
             @after_this_request
             def cleanup(response):
                 try:
                     os.unlink(pdf_path)
-                except Exception:
-                    # File cleanup is best-effort; log but don't fail the request
-                    pass
+                except Exception as e:
+                    # Log error but don't fail the response
+                    print(f"Warning: Failed to delete temp file {pdf_path}: {e}")
                 return response
 
             return send_file(
