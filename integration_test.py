@@ -11,12 +11,7 @@ import os
 import requests
 import time
 import sys
-import io
 from typing import Dict, Any
-
-# Fix Windows console encoding for emojis
-if sys.platform == 'win32':
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def test_complete_integration():
     """Test the complete text-to-JSON conversion integration"""

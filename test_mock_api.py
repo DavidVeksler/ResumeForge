@@ -9,12 +9,7 @@ without requiring external dependencies like pytest or OpenAI API keys.
 import json
 import re
 import sys
-import io
 from typing import Dict, List, Any
-
-# Fix Windows console encoding for emojis
-if sys.platform == 'win32':
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def run_comprehensive_tests():
     """Run comprehensive tests for text-to-JSON conversion feature"""

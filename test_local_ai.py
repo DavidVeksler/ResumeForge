@@ -6,12 +6,7 @@ Test script for local AI integration with LM Studio
 import os
 import json
 import sys
-import io
 from openai import OpenAI
-
-# Fix Windows console encoding for emojis
-if sys.platform == 'win32':
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def test_local_ai():
     """Test the local LM Studio integration"""

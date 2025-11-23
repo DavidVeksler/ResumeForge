@@ -216,11 +216,13 @@ def _get_feature_availability(health_data: Dict[str, Any]) -> Dict[str, bool]:
     dependencies = health_data.get('dependencies', {})
     ai_status = health_data.get('ai_provider', {})
     files = health_data.get('files', {})
+    text_to_json_available = OPENAI_AVAILABLE and ai_status.get('configured', False)
 
     return {
         'resume_optimization': True,
         'pdf_export': dependencies.get('pdfkit', False) and dependencies.get('wkhtmltopdf', False),
-        'text_to_json_parsing': OPENAI_AVAILABLE and ai_status.get('configured', False),
+        'text_to_json_parsing': text_to_json_available,
+        'text_to_json': text_to_json_available,
         'resume_validation': True,
         'sample_template': files.get('david_resume_json.json', {}).get('exists', False),
         'keyword_extraction': True,

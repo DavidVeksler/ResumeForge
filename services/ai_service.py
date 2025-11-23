@@ -72,7 +72,7 @@ class AIService:
         if not text_resume or not text_resume.strip():
             raise ValueError("Text resume cannot be empty")
 
-        system_prompt = self._get_parsing_system_prompt()
+        system_prompt = self.get_parsing_system_prompt()
         user_prompt = f"Convert this resume to JSON:\n\n{text_resume}"
 
         try:
@@ -86,7 +86,7 @@ class AIService:
                 max_tokens=4000
             )
 
-            json_content = self._extract_json_from_response(response)
+            json_content = self.extract_json_from_response(response)
             parsed_resume = json.loads(json_content)
 
             return parsed_resume
@@ -96,7 +96,8 @@ class AIService:
         except Exception as e:
             raise AIProviderError(f"Resume parsing failed: {str(e)}")
 
-    def _extract_json_from_response(self, response) -> str:
+    @staticmethod
+    def extract_json_from_response(response) -> str:
         """Extract and clean JSON from AI response"""
         json_content = response.choices[0].message.content.strip()
 
@@ -108,7 +109,8 @@ class AIService:
 
         return json_content.strip()
 
-    def _get_parsing_system_prompt(self) -> str:
+    @staticmethod
+    def get_parsing_system_prompt() -> str:
         """Get the system prompt for resume parsing"""
         return """You are a resume parsing expert. Convert the provided text resume into a structured JSON format exactly matching this schema:
 

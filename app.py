@@ -28,6 +28,13 @@ except ImportError as e:
 import json
 import os
 import tempfile
+from typing import Any, Dict
+
+# OpenAI import for patching/testing
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None
 
 # Load environment variables
 try:
@@ -46,6 +53,24 @@ from validation.validators import ResumeValidator, JobDescriptionValidator
 if FLASK_AVAILABLE:
     app = Flask(__name__)
     CORS(app)
+
+
+def validate_resume_structure(resume_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Validate resume data and return a serializable result."""
+    validation = ResumeValidator.validate(resume_data)
+    return validation.to_dict()
+
+
+def _strip_json_content(content: str) -> str:
+    """Remove optional markdown fences from AI responses."""
+    cleaned = content.strip()
+    if cleaned.startswith("```json"):
+        cleaned = cleaned[7:]
+    if cleaned.startswith("```"):
+        cleaned = cleaned[3:]
+    if cleaned.endswith("```"):
+        cleaned = cleaned[:-3]
+    return cleaned.strip()
 
 
 # =============================================================================
@@ -207,38 +232,51 @@ if FLASK_AVAILABLE:
     @app.route('/api/parse-resume', methods=['POST'])
     def parse_text_resume():
         """Convert text resume to structured JSON using configurable AI provider"""
-        if not OPENAI_AVAILABLE:
+        if not OPENAI_AVAILABLE or OpenAI is None:
             return jsonify({
-                'error': 'OpenAI package not available. Install openai package.'
+                'error': 'OpenAI not available. Install openai package.'
             }), 500
 
+        data = request.get_json()
+        if not data or 'textResume' not in data:
+            return jsonify({'error': 'Missing textResume field'}), 400
+
+        text_resume = data.get('textResume', '')
+        if not text_resume or not str(text_resume).strip():
+            return jsonify({'error': 'Text resume cannot be empty'}), 400
+
+        api_key = os.getenv('OPENAI_API_KEY')
+        if not api_key:
+            return jsonify({'error': 'OpenAI API key not configured'}), 500
+
         try:
-            data = request.get_json()
-            if not data or 'textResume' not in data:
-                return jsonify({'error': 'Missing textResume field'}), 400
+            client = OpenAI(api_key=api_key)
+            response = client.chat.completions.create(
+                model=os.getenv('OPENAI_MODEL', 'gpt-4o-mini'),
+                messages=[
+                    {"role": "system", "content": AIService.get_parsing_system_prompt()},
+                    {"role": "user", "content": f"Convert this resume to JSON:\n\n{text_resume.strip()}"}
+                ],
+                temperature=0.1,
+                max_tokens=4000
+            )
 
-            text_resume = data['textResume'].strip()
+            json_content = _strip_json_content(response.choices[0].message.content)
+            parsed_resume = json.loads(json_content)
 
-            # Use AI service for parsing
-            ai_service = AIService()
-            parsed_resume = ai_service.parse_resume_text(text_resume)
-
-            # Validate the parsed resume structure
-            validation_result = ResumeValidator.validate(parsed_resume)
-
-            return jsonify({
-                'success': True,
-                'resumeData': parsed_resume,
-                'validation': validation_result.to_dict(),
-                'message': 'Resume successfully converted to structured JSON format'
-            })
-
-        except ValueError as e:
-            return jsonify({'error': str(e)}), 400
-        except AIProviderError as e:
-            return jsonify({'error': str(e)}), 500
+        except json.JSONDecodeError as e:
+            return jsonify({'error': f'Failed to parse AI response as JSON: {str(e)}'}), 500
         except Exception as e:
             return jsonify({'error': f'Resume parsing failed: {str(e)}'}), 500
+
+        validation_result = validate_resume_structure(parsed_resume)
+
+        return jsonify({
+            'success': True,
+            'resumeData': parsed_resume,
+            'validation': validation_result,
+            'message': 'Resume successfully converted to structured JSON format'
+        })
 
     @app.route('/api/health', methods=['GET'])
     def health_check():

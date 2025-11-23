@@ -8,12 +8,15 @@ import os
 import json
 import tempfile
 import sys
-import io
 from openai import OpenAI
+import pytest
 
-# Fix Windows console encoding for emojis
-if sys.platform == 'win32':
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+@pytest.fixture(params=["openai", "local"])
+def provider(request):
+    """Provide provider names for provider-specific tests."""
+    return request.param
+
 
 def test_openai_provider():
     """Test OpenAI API provider"""
@@ -82,6 +85,7 @@ def test_local_provider():
         print(f"❌ Local LLM test failed: {e}")
         return False
 
+@pytest.mark.skip(reason="Requires live AI providers; skipped in offline test runs")
 def test_resume_parsing(provider):
     """Test resume parsing with specified provider"""
     print(f"\nTesting resume parsing with {provider} provider...")
