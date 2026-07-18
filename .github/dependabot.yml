@@ -1,0 +1,47 @@
+# Managed by DavidVeksler/dependabot-fleet
+version: 2
+
+updates:
+  - package-ecosystem: "npm"
+    directories:
+      - "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:30"
+      timezone: "America/Denver"
+    open-pull-requests-limit: 5
+    groups:
+      non-major-updates:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      security-updates:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
+
+  - package-ecosystem: "pip"
+    directories:
+      - "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "01:05"
+      timezone: "America/Denver"
+    open-pull-requests-limit: 5
+    groups:
+      non-major-updates:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      security-updates:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
