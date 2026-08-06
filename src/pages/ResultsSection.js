@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ResumeDisplay from './ResumeDisplay';
+import ResumeDisplay from '../components/ResumeDisplay';
 import Dashboard from './Dashboard';
 
 const ResultsSection = ({ data, onBackToInput }) => {
