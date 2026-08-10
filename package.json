@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^19.2.7",
+    "react-dom": "^19.2.8",
     "react-scripts": "5.0.1",
-    "axios": "^1.18.1",
+    "axios": "^1.19.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.11.3"
   },
