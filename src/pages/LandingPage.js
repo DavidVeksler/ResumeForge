@@ -3,12 +3,12 @@ import AppStorage from '../utils/storage';
 import landingContent from '../data/landingContent.json';
 
 // Import landing page components
-import Navigation from './landing/Navigation';
-import HeroSection from './landing/HeroSection';
-import FeaturesSection from './landing/FeaturesSection';
-import HowItWorksSection from './landing/HowItWorksSection';
-import TestimonialsSection from './landing/TestimonialsSection';
-import Footer from './landing/Footer';
+import Navigation from '../components/landing/Navigation';
+import HeroSection from '../components/landing/HeroSection';
+import FeaturesSection from '../components/landing/FeaturesSection';
+import HowItWorksSection from '../components/landing/HowItWorksSection';
+import TestimonialsSection from '../components/landing/TestimonialsSection';
+import Footer from '../components/landing/Footer';
 
 const LandingPage = ({ onGetStarted }) => {
   const [email, setEmail] = useState('');

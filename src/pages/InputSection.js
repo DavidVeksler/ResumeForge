@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import FileUpload from './FileUpload';
+import FileUpload from '../components/FileUpload';
 import TextResumeInput from './TextResumeInput';
-import StorageDebugger from './StorageDebugger';
+import StorageDebugger from '../components/StorageDebugger';
 import AppStorage from '../utils/storage';
 import { useResumeData, useJobDescription } from '../hooks';
 
