@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 Technical guidance for AI assistants (Claude Code) when working with this repository.
 

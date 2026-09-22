@@ -131,7 +131,7 @@ ResumeForge/
 │
 └── Documentation
     ├── README.md           # This file
-    ├── CLAUDE.md          # Technical architecture
+    ├── AGENTS.md          # Technical architecture
     └── DEPLOYMENT.md      # Production deployment
 ```
 
